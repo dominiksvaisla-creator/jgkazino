@@ -1,0 +1,1903 @@
+<!DOCTYPE html>
+<html lang="lv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Jāņa Gaiļa Kazīno</title>
+<style>
+:root{
+  --bg-0:#050506;
+  --bg-1:#0d0d10;
+  --glass-fill: rgba(255,255,255,0.07);
+  --glass-fill-strong: rgba(255,255,255,0.13);
+  --glass-fill-press: rgba(255,255,255,0.18);
+  --glass-border: rgba(255,255,255,0.16);
+  --glass-highlight: rgba(255,255,255,0.55);
+  --gold:#ffd60a;
+  --gold-deep:#c8960a;
+  --gold-dim: rgba(255,214,10,0.35);
+  --red:#ff453a;
+  --red-deep:#7a0f0a;
+  --green:#32d74b;
+  --text-1:#f5f5f7;
+  --text-2:rgba(235,235,245,0.62);
+  --text-3:rgba(235,235,245,0.38);
+  --r-xl:32px;
+  --r-lg:24px;
+  --r-md:18px;
+  --r-sm:12px;
+  --spring: cubic-bezier(.34,1.56,.64,1);
+  --settle: cubic-bezier(.16,.85,.24,1.15);
+  --ease: cubic-bezier(.16,1,.3,1);
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html{-webkit-font-smoothing:antialiased;}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","Segoe UI",Roboto,sans-serif;
+  background:var(--bg-0);
+  color:var(--text-1);
+  min-height:100vh;
+  overflow-x:hidden;
+  position:relative;
+}
+
+/* ---------- ambient mesh background ---------- */
+.mesh{position:fixed;inset:0;z-index:0;overflow:hidden;}
+.mesh span{
+  position:absolute;border-radius:50%;filter:blur(90px);
+  opacity:.35;mix-blend-mode:screen;
+  animation:drift 26s ease-in-out infinite;
+}
+.mesh span:nth-child(1){width:520px;height:520px;background:#8b6d00;top:-160px;left:-120px;animation-duration:30s;}
+.mesh span:nth-child(2){width:460px;height:460px;background:#5c1a12;bottom:-140px;right:-100px;animation-duration:24s;animation-delay:-8s;}
+.mesh span:nth-child(3){width:380px;height:380px;background:#3a2f00;top:40%;left:60%;animation-duration:34s;animation-delay:-14s;}
+@keyframes drift{
+  0%,100%{transform:translate(0,0) scale(1);}
+  33%{transform:translate(40px,-30px) scale(1.08);}
+  66%{transform:translate(-30px,30px) scale(0.95);}
+}
+@media (prefers-reduced-motion: reduce){
+  .mesh span{animation:none;}
+}
+
+/* ---------- admin abuse mode ---------- */
+body.admin-abuse-mode{background:#020d05;transition:background .8s var(--ease);}
+body.admin-abuse-mode .mesh span:nth-child(1){background:#0b5c25;}
+body.admin-abuse-mode .mesh span:nth-child(2){background:#0f8a34;}
+body.admin-abuse-mode .mesh span:nth-child(3){background:#12b34a;}
+body.admin-abuse-mode .glass{border-color:rgba(50,215,75,.35);}
+.admin-abuse-btn{
+  background:linear-gradient(135deg,#63e37d,var(--green) 55%,#146024);color:#03210a;
+  box-shadow:0 8px 20px -8px rgba(50,215,75,.55);
+}
+.admin-abuse-btn.active{
+  background:linear-gradient(135deg,#ff8a80,var(--red) 55%,#7a0f0a);color:#fff;
+  animation:abuseButtonPulse 1.2s ease-in-out infinite;
+}
+@keyframes abuseButtonPulse{0%,100%{box-shadow:0 8px 20px -8px rgba(255,69,58,.55);}50%{box-shadow:0 0 0 6px rgba(255,69,58,.35);}}
+
+.falling-gailis{
+  position:fixed;pointer-events:none;z-index:1;user-select:none;
+  animation-name:fall;animation-timing-function:cubic-bezier(.45,0,.55,1);animation-iteration-count:1;
+  will-change:transform,opacity;
+}
+@keyframes fall{
+  0%{transform:translateY(-10vh) translateX(0) rotate(0deg);opacity:0;}
+  8%{opacity:var(--op,.22);}
+  50%{transform:translateY(52vh) translateX(var(--sway,24px)) rotate(180deg);}
+  92%{opacity:var(--op,.22);}
+  100%{transform:translateY(112vh) translateX(0) rotate(360deg);opacity:0;}
+}
+
+/* ---------- layout ---------- */
+.container{max-width:900px;margin:0 auto;padding:22px 16px 60px;position:relative;z-index:5;}
+
+.glass{
+  background:var(--glass-fill);
+  border:1px solid var(--glass-border);
+  border-radius:var(--r-xl);
+  backdrop-filter:blur(28px) saturate(180%);
+  -webkit-backdrop-filter:blur(28px) saturate(180%);
+  position:relative;
+  box-shadow:0 1px 0 rgba(255,255,255,.06) inset, 0 20px 40px -20px rgba(0,0,0,.6);
+}
+.glass::before{
+  content:'';position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  background:linear-gradient(135deg, var(--glass-highlight), transparent 34%);
+  opacity:.09;
+}
+
+header.hero{
+  padding:34px 28px 30px;margin-bottom:18px;text-align:center;overflow:hidden;
+  animation:appear .7s var(--ease) both;
+}
+header.hero .rooster-badge{
+  font-size:2.6em;display:inline-block;filter:drop-shadow(0 0 18px var(--gold-dim));
+  animation:bob 4s ease-in-out infinite;
+}
+@keyframes bob{0%,100%{transform:translateY(0) rotate(-3deg);}50%{transform:translateY(-6px) rotate(3deg);}}
+h1{
+  font-size:2.5em;font-weight:800;letter-spacing:-.02em;margin-top:6px;
+  background:linear-gradient(180deg,#fff, #ffe9a8 60%, var(--gold));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.subtitle{color:var(--text-2);font-size:.98em;margin-top:6px;font-weight:500;}
+
+@keyframes appear{from{opacity:0;transform:translateY(14px) scale(.98);}to{opacity:1;transform:none;}}
+
+/* ---------- auth ---------- */
+.auth-section{padding:22px;margin-bottom:18px;animation:appear .7s var(--ease) both;animation-delay:.05s;}
+.seg{
+  display:flex;background:rgba(0,0,0,.35);border-radius:999px;padding:4px;margin-bottom:20px;position:relative;
+}
+.seg-pill{
+  position:absolute;top:4px;bottom:4px;border-radius:999px;
+  background:linear-gradient(135deg,var(--gold),var(--gold-deep));
+  transition:transform .45s var(--spring), width .45s var(--spring);
+  z-index:0;box-shadow:0 4px 14px rgba(0,0,0,.35);
+}
+.seg button{
+  flex:1;position:relative;z-index:1;border:none;background:none;color:var(--text-2);
+  padding:11px 10px;font-size:1em;font-weight:600;cursor:pointer;border-radius:999px;
+  transition:color .3s var(--ease);
+}
+.seg button.active{color:#1a1400;}
+
+.auth-form{display:none;animation:fadeUp .35s var(--ease) both;}
+.auth-form.active{display:block;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
+
+.field{margin-bottom:14px;}
+.field label{display:block;font-size:.82em;color:var(--text-2);margin-bottom:6px;font-weight:600;}
+.field input{
+  width:100%;padding:13px 15px;background:rgba(0,0,0,.32);
+  border:1px solid var(--glass-border);border-radius:var(--r-md);
+  color:var(--text-1);font-size:1em;transition:border-color .25s var(--ease), box-shadow .25s var(--ease);
+}
+.field input:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 4px var(--gold-dim);}
+.field input::placeholder{color:var(--text-3);}
+
+/* ---------- buttons ---------- */
+.btn{
+  appearance:none;border:none;cursor:pointer;font-weight:700;font-size:1em;
+  padding:13px 26px;border-radius:999px;color:#1a1400;
+  background:linear-gradient(135deg,#ffe27a,var(--gold) 55%,var(--gold-deep));
+  box-shadow:0 8px 20px -8px rgba(255,214,10,.55), 0 1px 0 rgba(255,255,255,.4) inset;
+  transition:transform .18s var(--spring), box-shadow .18s var(--ease), opacity .2s;
+  position:relative;
+}
+.btn:active{transform:scale(.94);}
+.btn:disabled{opacity:.35;cursor:not-allowed;transform:none;box-shadow:none;}
+.btn-ghost{
+  background:var(--glass-fill-strong);color:var(--text-1);
+  box-shadow:0 1px 0 rgba(255,255,255,.08) inset;border:1px solid var(--glass-border);
+}
+.btn-danger{background:linear-gradient(135deg,#ff6b60,var(--red) 60%,#a4241c);color:#fff;box-shadow:0 8px 20px -8px rgba(255,69,58,.55);}
+.btn-success{background:linear-gradient(135deg,#63e37d,var(--green) 60%,#1f8a34);color:#03210a;box-shadow:0 8px 20px -8px rgba(50,215,75,.5);}
+.btn-small{padding:7px 14px;font-size:.82em;}
+.btn-block{width:100%;}
+
+/* ---------- user bar ---------- */
+.user-info{
+  padding:16px 22px;margin-bottom:18px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;
+  animation:appear .7s var(--ease) both;
+}
+.avatar{
+  width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  background:radial-gradient(circle at 30% 30%,#3a3a3d,#151517);font-size:1.5em;
+  border:1px solid var(--glass-border);flex-shrink:0;
+}
+.user-info h2{font-size:1.05em;font-weight:700;}
+.admin-pill{
+  background:linear-gradient(135deg,#ff6b60,var(--red));color:#fff;font-size:.68em;font-weight:800;
+  padding:3px 10px;border-radius:999px;margin-left:8px;letter-spacing:.02em;
+  box-shadow:0 0 12px rgba(255,69,58,.55);vertical-align:middle;
+}
+.balance-box{
+  margin-left:auto;background:rgba(0,0,0,.35);border:1px solid var(--glass-border);
+  border-radius:var(--r-md);padding:9px 18px;display:flex;align-items:baseline;gap:8px;
+}
+.balance-box .num{color:var(--gold);font-size:1.35em;font-weight:800;font-variant-numeric:tabular-nums;}
+.balance-box .unit{color:var(--text-2);font-size:.78em;font-weight:600;}
+
+.loan-btn{
+  display:inline-flex;align-items:center;gap:6px;
+}
+.debt-pill{
+  display:none;align-items:center;gap:6px;background:rgba(255,69,58,.15);border:1px solid rgba(255,69,58,.4);
+  color:var(--red);border-radius:999px;padding:8px 14px;font-size:.8em;font-weight:800;
+  cursor:pointer;transition:transform .18s var(--spring);font-variant-numeric:tabular-nums;
+}
+.debt-pill:active{transform:scale(.94);}
+
+.bug-tip{
+  position:relative;display:inline-flex;align-items:center;justify-content:center;
+  width:38px;height:38px;border-radius:50%;background:var(--glass-fill-strong);
+  border:1px solid var(--glass-border);cursor:help;font-size:1.05em;flex-shrink:0;
+}
+.bug-tip-box{
+  position:absolute;bottom:120%;left:50%;transform:translateX(-50%) translateY(6px);
+  background:rgba(20,20,24,.94);backdrop-filter:blur(20px) saturate(180%);
+  border:1px solid var(--glass-border);border-radius:var(--r-sm);padding:10px 14px;
+  font-size:.78em;font-weight:600;color:var(--text-1);width:200px;text-align:center;
+  opacity:0;pointer-events:none;transition:opacity .25s var(--ease), transform .25s var(--ease);
+  box-shadow:0 10px 24px -10px rgba(0,0,0,.6);z-index:50;line-height:1.35;
+}
+.bug-tip:hover .bug-tip-box,.bug-tip:focus .bug-tip-box{
+  opacity:1;transform:translateX(-50%) translateY(0);
+}
+
+/* ---------- loan panel ---------- */
+.loan-panel{padding:26px;margin-bottom:18px;animation:appear .5s var(--ease) both;text-align:center;}
+.loan-panel h2{font-size:1.25em;margin-bottom:6px;}
+.loan-sub{color:var(--text-2);font-size:.88em;margin-bottom:18px;}
+.loan-debt-box{
+  display:none;background:rgba(255,69,58,.12);border:1px solid rgba(255,69,58,.35);color:var(--red);
+  border-radius:var(--r-md);padding:12px 16px;font-weight:700;margin-bottom:18px;font-variant-numeric:tabular-nums;
+}
+.loan-preview{color:var(--text-2);font-size:.92em;margin:16px 0;}
+.loan-preview b{color:var(--gold);}
+
+/* ---------- segmented game tabs ---------- */
+.game-menu{
+  position:relative;display:flex;background:rgba(0,0,0,.32);border:1px solid var(--glass-border);
+  border-radius:999px;padding:5px;margin-bottom:18px;backdrop-filter:blur(20px);
+  animation:appear .7s var(--ease) both;
+}
+.game-menu .pill{
+  position:absolute;top:5px;bottom:5px;border-radius:999px;
+  background:linear-gradient(135deg,var(--gold),var(--gold-deep));
+  transition:transform .5s var(--spring), width .5s var(--spring);
+  box-shadow:0 6px 16px -4px rgba(255,214,10,.5);
+}
+.game-btn{
+  position:relative;z-index:1;flex:1;border:none;background:none;cursor:pointer;
+  padding:12px 6px;border-radius:999px;color:var(--text-2);font-weight:700;font-size:.92em;
+  display:flex;flex-direction:column;align-items:center;gap:4px;transition:color .3s var(--ease);
+}
+.game-btn span{font-size:1.5em;filter:none;}
+.game-btn.active{color:#1a1400;}
+
+/* ---------- game area ---------- */
+.game-area{padding:26px;margin-bottom:18px;min-height:420px;}
+.game-content{display:none;animation:gameIn .45s var(--ease) both;}
+.game-content.showing{display:block;}
+@keyframes gameIn{from{opacity:0;transform:translateY(10px) scale(.985);}to{opacity:1;transform:none;}}
+.game-title{font-size:1.4em;font-weight:800;margin-bottom:18px;text-align:center;letter-spacing:-.01em;}
+
+.bet-control{
+  display:flex;align-items:center;justify-content:center;gap:14px;margin:18px 0;flex-wrap:wrap;
+}
+.bet-adj{
+  width:38px;height:38px;border-radius:50%;border:1px solid var(--glass-border);
+  background:var(--glass-fill-strong);color:var(--text-1);font-size:1.1em;font-weight:700;cursor:pointer;
+  transition:transform .18s var(--spring), background .2s;
+}
+.bet-adj:active{transform:scale(.88);background:var(--glass-fill-press);}
+.bet-adj:disabled{opacity:.3;cursor:not-allowed;}
+.bet-amount{
+  min-width:88px;max-width:150px;text-align:center;font-size:1.3em;font-weight:800;color:var(--gold);
+  font-variant-numeric:tabular-nums;background:transparent;border:none;border-bottom:2px solid transparent;
+  font-family:inherit;padding:2px 4px;transition:border-color .2s var(--ease);
+  -moz-appearance:textfield;
+}
+.bet-amount::-webkit-outer-spin-button,.bet-amount::-webkit-inner-spin-button{
+  -webkit-appearance:none;margin:0;
+}
+.bet-amount:focus{outline:none;border-bottom-color:var(--gold-dim);}
+.bet-amount:disabled{opacity:.5;cursor:not-allowed;}
+.bet-label{color:var(--text-2);font-size:.85em;font-weight:600;margin-right:2px;}
+
+/* ---------- slots ---------- */
+.slot-machine{
+  background:linear-gradient(180deg,#1c1c1f,#101012);border:1px solid var(--glass-border);
+  border-radius:var(--r-lg);padding:28px 22px;text-align:center;
+  box-shadow:0 1px 0 rgba(255,255,255,.06) inset, 0 30px 50px -30px rgba(0,0,0,.8);
+}
+.reels{display:flex;justify-content:center;gap:16px;margin-bottom:22px;}
+.reel{
+  width:96px;height:110px;background:#0a0a0c;border:2px solid var(--glass-border);border-radius:var(--r-md);
+  display:flex;align-items:center;justify-content:center;font-size:3.4em;
+  position:relative;box-shadow:inset 0 10px 22px rgba(0,0,0,.65), inset 0 -10px 22px rgba(0,0,0,.65);
+  transition:border-color .25s var(--ease);
+}
+.reel::after{
+  content:'';position:absolute;inset:0;pointer-events:none;border-radius:inherit;
+  background:linear-gradient(180deg, rgba(255,214,10,.12), transparent 22%, transparent 78%, rgba(255,214,10,.12));
+  border:1px solid var(--gold-dim);border-radius:inherit;
+}
+.reel.spinning{
+  animation:reelSpin .2s linear infinite;
+  border-color:var(--gold-dim);
+}
+@keyframes reelSpin{
+  0%{transform:translateY(0);}
+  50%{transform:translateY(18px);}
+  100%{transform:translateY(0);}
+}
+.slot-machine.win-glow{animation:winPulse 1.1s ease-in-out 2;}
+@keyframes winPulse{0%,100%{box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 50px -30px rgba(0,0,0,.8);}50%{box-shadow:0 0 0 3px var(--gold), 0 0 50px 6px var(--gold-dim);}}
+.paytable{margin-top:16px;color:var(--text-2);font-size:.85em;}
+
+/* ---------- poker / blackjack tables ---------- */
+.felt-table{
+  background:radial-gradient(circle at 50% 20%, #1c5c34, #0e3a1f 70%);
+  border:1px solid rgba(255,255,255,.1);border-radius:44px;padding:30px 22px;
+  box-shadow:inset 0 0 60px rgba(0,0,0,.55), inset 0 0 0 8px rgba(0,0,0,.18);
+}
+.zone-label{color:rgba(255,255,255,.75);font-size:.85em;font-weight:700;margin-bottom:8px;letter-spacing:.01em;}
+.zone{margin:14px 0;}
+.cards{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;min-height:96px;perspective:600px;}
+.card{
+  width:64px;height:92px;border-radius:10px;background:#fff;color:#111;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:1.5em;font-weight:800;
+  box-shadow:0 8px 16px -6px rgba(0,0,0,.6);position:relative;
+  animation:dealIn .45s var(--settle) both;transform-style:preserve-3d;
+}
+.card.red{color:#d21f1f;}
+.card.hidden{background:repeating-linear-gradient(135deg,#2b2b30 0 10px,#3a3a40 10px 20px);color:transparent;}
+.card.hidden::after{
+  content:'🐓';color:var(--gold-dim);font-size:1.1em;filter:none;
+}
+@keyframes dealIn{
+  0%{opacity:0;transform:translateY(-30px) rotate(-8deg) scale(.7);}
+  100%{opacity:1;transform:translateY(0) rotate(0) scale(1);}
+}
+.card.flip{animation:cardFlip .5s var(--ease) both;}
+@keyframes cardFlip{
+  0%{transform:rotateY(90deg);}
+  100%{transform:rotateY(0deg);}
+}
+.hand-value{color:var(--gold);font-size:.95em;font-weight:700;margin-top:6px;text-align:center;min-height:1.2em;}
+.status-line{
+  text-align:center;color:var(--text-2);font-size:.88em;margin:10px 0 4px;font-weight:600;
+}
+.status-line b{color:var(--gold);}
+.action-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:18px;}
+
+/* ---------- roulette ---------- */
+.roulette-wrap{display:flex;flex-direction:column;align-items:center;margin:10px 0 22px;}
+.wheel-frame{position:relative;width:260px;height:260px;}
+.pointer{
+  position:absolute;top:-4px;left:50%;transform:translateX(-50%);width:0;height:0;
+  border-left:11px solid transparent;border-right:11px solid transparent;border-top:18px solid var(--gold);
+  z-index:3;filter:drop-shadow(0 3px 4px rgba(0,0,0,.5));
+}
+.roulette-wheel{
+  width:100%;height:100%;border-radius:50%;position:relative;
+  border:6px solid #2a2a2e;box-shadow:0 0 0 2px var(--gold-dim), inset 0 0 30px rgba(0,0,0,.6), 0 20px 40px -18px rgba(0,0,0,.8);
+  will-change:transform;
+}
+.roulette-number{
+  position:absolute;top:50%;left:50%;width:26px;height:26px;margin:-13px;
+  display:flex;align-items:center;justify-content:center;font-size:.66em;font-weight:800;color:#fff;
+}
+.hub{
+  position:absolute;top:50%;left:50%;width:48px;height:48px;margin:-24px;border-radius:50%;
+  background:radial-gradient(circle at 35% 30%,#3a3a3d,#0c0c0e);border:2px solid var(--gold-dim);z-index:2;
+  display:flex;align-items:center;justify-content:center;font-size:1.3em;
+}
+.betting-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:18px 0;}
+.bet-cell{
+  background:var(--glass-fill-strong);border:1px solid var(--glass-border);border-radius:var(--r-sm);
+  padding:13px 8px;text-align:center;cursor:pointer;font-weight:700;font-size:.9em;
+  transition:transform .18s var(--spring), background .2s, border-color .2s;
+}
+.bet-cell:active{transform:scale(.93);}
+.bet-cell.selected{
+  background:linear-gradient(135deg,var(--gold),var(--gold-deep));color:#1a1400;
+  border-color:var(--gold);box-shadow:0 0 16px var(--gold-dim);
+}
+
+/* ---------- admin ---------- */
+.admin-panel{padding:22px;margin-bottom:18px;border-color:rgba(255,69,58,.4);}
+.admin-panel h2{font-size:1.15em;margin-bottom:16px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.admin-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:20px;}
+.stat-card{background:rgba(0,0,0,.3);border:1px solid var(--glass-border);border-radius:var(--r-md);padding:16px;text-align:center;}
+.stat-card h3{font-size:.72em;color:var(--text-2);font-weight:600;margin-bottom:6px;text-transform:none;}
+.stat-value{font-size:1.4em;font-weight:800;color:var(--gold);font-variant-numeric:tabular-nums;}
+.user-table{width:100%;border-collapse:collapse;font-size:.88em;}
+.user-table th{text-align:left;color:var(--text-2);font-weight:600;padding:8px 6px;border-bottom:1px solid var(--glass-border);font-size:.85em;}
+.user-table td{padding:9px 6px;border-bottom:1px solid rgba(255,255,255,.06);}
+.edit-balance{display:flex;gap:6px;align-items:center;}
+.edit-balance input{
+  width:88px;padding:7px 9px;background:rgba(0,0,0,.35);border:1px solid var(--glass-border);
+  border-radius:8px;color:#fff;font-size:.9em;
+}
+.row-actions{display:flex;gap:6px;flex-wrap:wrap;}
+
+/* ---------- leaderboard ---------- */
+.leaderboard{padding:22px;}
+.leaderboard h3{font-size:1.1em;margin-bottom:14px;text-align:center;}
+#leaderboardTable{width:100%;border-collapse:collapse;}
+#leaderboardTable th{text-align:left;color:var(--text-2);font-size:.8em;font-weight:600;padding:6px;}
+#leaderboardTable td{padding:10px 6px;border-bottom:1px solid rgba(255,255,255,.06);font-weight:600;}
+.rank-medal{font-size:1.1em;}
+
+footer{text-align:center;margin-top:26px;color:var(--text-3);font-size:.82em;}
+
+/* ---------- toast ---------- */
+.message-popup{
+  position:fixed;top:18px;left:50%;transform:translateX(-50%) translateY(-140%);
+  z-index:1000;min-width:240px;max-width:88vw;padding:14px 20px;
+  background:rgba(20,20,24,.75);backdrop-filter:blur(22px) saturate(180%);
+  border:1px solid var(--glass-border);border-radius:999px;
+  display:flex;align-items:center;gap:10px;font-weight:600;font-size:.92em;
+  box-shadow:0 12px 30px -10px rgba(0,0,0,.6);transition:transform .45s var(--spring);
+}
+.message-popup .dot{width:9px;height:9px;border-radius:50%;background:var(--gold);flex-shrink:0;box-shadow:0 0 8px currentColor;}
+.message-popup.type-success .dot{background:var(--green);}
+.message-popup.type-error .dot{background:var(--red);}
+.message-popup.show{transform:translateX(-50%) translateY(0);}
+
+.burst-particle{position:fixed;pointer-events:none;z-index:900;font-size:1.6em;will-change:transform,opacity;}
+
+::selection{background:var(--gold-dim);}
+@media (max-width:520px){
+  h1{font-size:1.9em;}
+  .card{width:52px;height:76px;font-size:1.15em;}
+  .reel{width:78px;font-size:2.8em;}
+}
+</style>
+</head>
+<body>
+<div class="mesh"><span></span><span></span><span></span></div>
+<div class="message-popup" id="messagePopup"><span class="dot"></span><span id="messageText"></span></div>
+
+<div class="container">
+  <header class="hero glass">
+    <div class="rooster-badge">🐓</div>
+    <h1>Jāņa <span style="font-style:italic;">Gaiļa</span> Kazīno</h1>
+    <div class="subtitle">Kur veiksme dzied kā gailis</div>
+  </header>
+
+  <!-- Auth -->
+  <div id="authSection" class="auth-section glass">
+    <div class="seg" id="authSeg">
+      <div class="seg-pill" id="authPill"></div>
+      <button class="active" data-tab="login" onclick="switchAuthTab('login')">Ienākt</button>
+      <button data-tab="register" onclick="switchAuthTab('register')">Reģistrēties</button>
+    </div>
+
+    <div id="loginForm" class="auth-form active">
+      <div class="field">
+        <label>Lietotājvārds</label>
+        <input type="text" id="loginUsername" placeholder="Ievadi savu vārdu…">
+      </div>
+      <div class="field">
+        <label>Parole</label>
+        <input type="password" id="loginPassword" placeholder="••••••••">
+      </div>
+      <button class="btn btn-block" onclick="login()">Ienākt spēlēt!</button>
+    </div>
+
+    <div id="registerForm" class="auth-form">
+      <div class="field">
+        <label>Lietotājvārds</label>
+        <input type="text" id="regUsername" placeholder="Izvēlies lietotājvārdu…">
+      </div>
+      <div class="field">
+        <label>Parole</label>
+        <input type="password" id="regPassword" placeholder="••••••••">
+      </div>
+      <div class="field">
+        <label>Apstiprini paroli</label>
+        <input type="password" id="regConfirmPassword" placeholder="••••••••">
+      </div>
+      <button class="btn btn-block" onclick="register()">Reģistrēties!</button>
+    </div>
+  </div>
+
+  <!-- User info -->
+  <div id="userInfo" class="user-info glass" style="display:none;">
+    <div class="avatar">🐓</div>
+    <h2 id="welcomeMessage">Sveiks!</h2>
+    <div class="balance-box"><span class="num" id="balanceDisplay">0</span><span class="unit">JG$</span></div>
+    <button class="btn btn-ghost btn-small loan-btn" onclick="openLoanPanel()">🏦 Aizņemties</button>
+    <span class="bug-tip" tabindex="0">🐛<span class="bug-tip-box">Ja redzi kādu glitch/bug, ziņo par to man WhatsApp!</span></span>
+    <span class="debt-pill" id="debtPill" onclick="openLoanPanel()">💸 Parāds: <span id="debtPillAmount">0</span> JG$</span>
+    <button class="btn btn-ghost" onclick="logout()">Iziet</button>
+  </div>
+
+  <!-- Loan panel -->
+  <div id="loanPanel" class="loan-panel glass" style="display:none;">
+    <h2>🏦 Jāņa Gaiļa Aizdevumu Banka</h2>
+    <div class="loan-sub">Aizņemies naudu no paša Jāņa Gaiļa — bet atceries, atdot vajadzēs DUBULTĀ! 🐓</div>
+    <div class="loan-debt-box" id="loanDebtBox">Tavs kopējais parāds: <b id="loanDebtAmount">0</b> JG$</div>
+    <div class="bet-control">
+      <span class="bet-label">Aizņemamā summa</span>
+      <button class="bet-adj" id="loanAmountMinus" onclick="adjustLoanAmount(-50)">−</button>
+      <input type="number" class="bet-amount" id="loanAmount" value="100" min="50" max="2000" step="50" onchange="clampBetInput(this,50,2000)">
+      <button class="bet-adj" id="loanAmountPlus" onclick="adjustLoanAmount(50)">+</button>
+    </div>
+    <div class="loan-preview">Tu saņemsi <b id="loanGetAmount">100</b> JG$ uzreiz, bet parādā būs <b id="loanOweAmount">200</b> JG$</div>
+    <div class="action-row">
+      <button class="btn btn-success" onclick="takeLoan()">Aizņemties</button>
+      <button class="btn btn-danger" onclick="repayLoan()">Atdot parādu</button>
+      <button class="btn btn-ghost" onclick="closeLoanPanel()">Aizvērt</button>
+    </div>
+  </div>
+
+  <!-- Game tabs -->
+  <div id="gameMenu" class="game-menu" style="display:none;">
+    <div class="pill" id="gamePill"></div>
+    <button class="game-btn active" data-game="slots" onclick="switchGame('slots', this)"><span>🎰</span>Sloti</button>
+    <button class="game-btn" data-game="poker" onclick="switchGame('poker', this)"><span>🃏</span>Pokers</button>
+    <button class="game-btn" data-game="roulette" onclick="switchGame('roulette', this)"><span>🎡</span>Rulete</button>
+    <button class="game-btn" data-game="blackjack" onclick="switchGame('blackjack', this)"><span>♠️</span>Blekdžeks</button>
+  </div>
+
+  <!-- Game area -->
+  <div id="gameArea" class="game-area glass" style="display:none;">
+
+    <!-- SLOTS -->
+    <div id="slotsGame" class="game-content">
+      <div class="game-title">Gaiļa laimes rats 🎰</div>
+      <div class="slot-machine" id="slotMachine">
+        <div class="reels">
+          <div class="reel" id="reel1">🐓</div>
+          <div class="reel" id="reel2">🐓</div>
+          <div class="reel" id="reel3">🐓</div>
+        </div>
+        <div class="bet-control">
+          <span class="bet-label">Likme</span>
+          <button class="bet-adj" id="betAmountMinus" onclick="adjustBet('betAmount',-10,10,Infinity)">−</button>
+          <input type="number" class="bet-amount" id="betAmount" value="10" min="10" step="10" onchange="clampBetInput(this,10)">
+          <button class="bet-adj" id="betAmountPlus" onclick="adjustBet('betAmount',10,10,Infinity)">+</button>
+        </div>
+        <button class="btn btn-block" id="spinButton" onclick="spin()">GRIEZ!</button>
+        <div class="paytable">🐓🐓🐓 2× &nbsp;·&nbsp; 🥚🥚🥚 5× &nbsp;·&nbsp; 👑👑👑 10× &nbsp;·&nbsp; ⭐⭐⭐ 20× &nbsp;·&nbsp; jebkuri 2 vienādi = 2× &nbsp;·&nbsp; ❌ jebkur = nekas nav vinnēts</div>
+      </div>
+    </div>
+
+    <!-- POKER -->
+    <div id="pokerGame" class="game-content">
+      <div class="game-title">Pokers pret NPC 🃏</div>
+      <div class="felt-table">
+        <div class="zone">
+          <div class="zone-label">NPC Gailis</div>
+          <div class="cards" id="npcCards"></div>
+        </div>
+        <div class="zone">
+          <div class="zone-label">Kopīgās kārtis</div>
+          <div class="cards" id="communityCards"></div>
+        </div>
+        <div class="zone">
+          <div class="zone-label">Tavas kārtis</div>
+          <div class="cards" id="playerCards"></div>
+        </div>
+        <div class="status-line" id="pokerStatus">Pirmsflopa · Pods: <b id="pokerPot">0</b> JG$</div>
+      </div>
+      <div class="bet-control">
+        <span class="bet-label">Ante</span>
+        <button class="bet-adj" id="pokerBetMinus" onclick="adjustBet('pokerBet',-10,10,Infinity)">−</button>
+        <input type="number" class="bet-amount" id="pokerBet" value="10" min="10" step="10" onchange="clampBetInput(this,10)">
+        <button class="bet-adj" id="pokerBetPlus" onclick="adjustBet('pokerBet',10,10,Infinity)">+</button>
+      </div>
+      <div class="action-row">
+        <button class="btn btn-danger" id="pokerFoldBtn" onclick="pokerAction('fold')">Padoties</button>
+        <button class="btn" id="pokerCallBtn" onclick="pokerAction('call')">Likme</button>
+        <button class="btn btn-ghost" id="pokerRaiseBtn" onclick="pokerAction('raise')">Paaugstināt</button>
+        <button class="btn btn-success" onclick="startPokerGame()">Jauna spēle</button>
+      </div>
+    </div>
+
+    <!-- ROULETTE -->
+    <div id="rouletteGame" class="game-content">
+      <div class="game-title">Gaiļa rulete 🎡</div>
+      <div class="roulette-wrap">
+        <div class="wheel-frame">
+          <div class="pointer"></div>
+          <div class="roulette-wheel" id="rouletteWheel"></div>
+          <div class="hub">🐓</div>
+        </div>
+      </div>
+      <div class="status-line" id="rouletteStatus">Izvēlies likmi un griez ruleti</div>
+      <div class="bet-control">
+        <span class="bet-label">Likme</span>
+        <button class="bet-adj" id="rouletteBetMinus" onclick="adjustBet('rouletteBet',-10,10,Infinity)">−</button>
+        <input type="number" class="bet-amount" id="rouletteBet" value="10" min="10" step="10" onchange="clampBetInput(this,10)">
+        <button class="bet-adj" id="rouletteBetPlus" onclick="adjustBet('rouletteBet',10,10,Infinity)">+</button>
+      </div>
+      <div class="betting-grid" id="rouletteBettingGrid">
+        <div class="bet-cell" data-bet="red" onclick="placeRouletteBet('red')">🔴 Sarkanā</div>
+        <div class="bet-cell" data-bet="black" onclick="placeRouletteBet('black')">⚫ Melnā</div>
+        <div class="bet-cell" data-bet="even" onclick="placeRouletteBet('even')">Pāra</div>
+        <div class="bet-cell" data-bet="odd" onclick="placeRouletteBet('odd')">Nepāra</div>
+        <div class="bet-cell" data-bet="1-12" onclick="placeRouletteBet('1-12')">1–12</div>
+        <div class="bet-cell" data-bet="13-24" onclick="placeRouletteBet('13-24')">13–24</div>
+        <div class="bet-cell" data-bet="25-36" onclick="placeRouletteBet('25-36')">25–36</div>
+        <div class="bet-cell" data-bet="1-18" onclick="placeRouletteBet('1-18')">1–18</div>
+        <div class="bet-cell" data-bet="19-36" onclick="placeRouletteBet('19-36')">19–36</div>
+      </div>
+      <button class="btn btn-block" id="rouletteSpinBtn" onclick="spinRoulette()">Griezt ruleti</button>
+    </div>
+
+    <!-- BLACKJACK -->
+    <div id="blackjackGame" class="game-content">
+      <div class="game-title">Blekdžeks pret NPC ♠️</div>
+      <div class="felt-table">
+        <div class="zone">
+          <div class="zone-label">Dīleris Gailis</div>
+          <div class="cards" id="dealerCards"></div>
+          <div class="hand-value" id="dealerValue"></div>
+        </div>
+        <div class="zone">
+          <div class="zone-label">Tavas kārtis</div>
+          <div class="cards" id="playerBlackjackCards"></div>
+          <div class="hand-value" id="playerValue"></div>
+        </div>
+      </div>
+      <div class="bet-control">
+        <span class="bet-label">Likme</span>
+        <button class="bet-adj" id="blackjackBetMinus" onclick="adjustBet('blackjackBet',-10,10,Infinity)">−</button>
+        <input type="number" class="bet-amount" id="blackjackBet" value="10" min="10" step="10" onchange="clampBetInput(this,10)">
+        <button class="bet-adj" id="blackjackBetPlus" onclick="adjustBet('blackjackBet',10,10,Infinity)">+</button>
+      </div>
+      <div class="action-row">
+        <button class="btn" id="bjHitBtn" onclick="blackjackAction('hit')">Ņemt kārti</button>
+        <button class="btn btn-ghost" id="bjStandBtn" onclick="blackjackAction('stand')">Pietiek</button>
+        <button class="btn" id="bjDoubleBtn" onclick="blackjackAction('double')">Dubultā</button>
+        <button class="btn btn-success" onclick="startBlackjack()">Jauna spēle</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Admin -->
+  <div id="adminPanel" class="admin-panel glass" style="display:none;">
+    <h2>🛡️ Administratora panelis <span class="admin-pill">DOMINIKS</span></h2>
+    <div class="admin-stats">
+      <div class="stat-card"><h3>Kopējie lietotāji</h3><div class="stat-value" id="totalUsers">0</div></div>
+      <div class="stat-card"><h3>Kopējā bilance</h3><div class="stat-value" id="totalBalance">0</div></div>
+      <div class="stat-card"><h3>Bagātākais spēlētājs</h3><div class="stat-value" id="richestPlayer">–</div></div>
+    </div>
+    <div style="text-align:center;margin-bottom:20px;">
+      <button class="btn admin-abuse-btn" id="adminAbuseBtn" onclick="toggleAdminAbuse()">🐔💥 Ieslēgt Admin Abuse</button>
+      <div style="color:var(--text-2);font-size:.78em;margin-top:8px;">Dubulto naudas laimestus, palielina veiksmi slotos/ruletē, un maina fonu visiem spēlētājiem</div>
+    </div>
+    <div class="user-management">
+      <h3 style="color:var(--gold);font-size:.95em;margin-bottom:10px;">Spēlētāju pārvaldība</h3>
+      <table class="user-table">
+        <thead><tr><th>Lietotājs</th><th>Bilance (JG$)</th><th>Darbības</th></tr></thead>
+        <tbody id="adminUserList"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Leaderboard -->
+  <div class="leaderboard glass">
+    <h3>🏆 Gaiļu TOP 10 🏆 <button class="btn btn-ghost btn-small" onclick="syncFromRemote(true)" title="Atsvaidzināt no servera" style="margin-left:8px;vertical-align:middle;">🔄</button></h3>
+    <table id="leaderboardTable">
+      <thead><tr><th>Vieta</th><th>Spēlētājs</th><th>Bilance</th></tr></thead>
+      <tbody id="leaderboardBody"></tbody>
+    </table>
+  </div>
+
+  <footer>© 2026 Jāņa Gaiļa Kazīno</footer>
+</div>
+
+<script>
+'use strict';
+
+/* ================= ambient falling roosters ================= */
+function createFallingGailis(){
+  const g = document.createElement('div');
+  g.className = 'falling-gailis';
+  g.textContent = '🐓';
+  const size = Math.random()*26+16;
+  const dur = Math.random()*7+7;
+  const op = (Math.random()*.18+.12).toFixed(2);
+  g.style.left = Math.random()*100+'%';
+  g.style.fontSize = size+'px';
+  g.style.filter = `blur(${(1-size/42)*2.2}px)`;
+  g.style.setProperty('--sway',(Math.random()*50-25)+'px');
+  g.style.setProperty('--op',op);
+  g.style.animationDuration = dur+'s';
+  document.body.appendChild(g);
+  setTimeout(()=>g.remove(), dur*1000+200);
+}
+setInterval(createFallingGailis, 900);
+for(let i=0;i<4;i++) setTimeout(createFallingGailis, i*300);
+
+/* ================= admin abuse: money rain ================= */
+const MONEY_EMOJI = ['💰','💵','🤑','💸'];
+function createFallingMoney(){
+  const g = document.createElement('div');
+  g.className = 'falling-gailis';
+  g.textContent = MONEY_EMOJI[Math.floor(Math.random()*MONEY_EMOJI.length)];
+  const size = Math.random()*24+18;
+  const dur = Math.random()*6+5;
+  const op = (Math.random()*.3+.25).toFixed(2);
+  g.style.left = Math.random()*100+'%';
+  g.style.fontSize = size+'px';
+  g.style.filter = `blur(${(1-size/42)*1.4}px)`;
+  g.style.setProperty('--sway',(Math.random()*60-30)+'px');
+  g.style.setProperty('--op',op);
+  g.style.animationDuration = dur+'s';
+  document.body.appendChild(g);
+  setTimeout(()=>g.remove(), dur*1000+200);
+}
+let moneyRainInterval = null;
+function startMoneyRain(){
+  if (moneyRainInterval) return;
+  moneyRainInterval = setInterval(createFallingMoney, 260);
+  for(let i=0;i<8;i++) setTimeout(createFallingMoney, i*90);
+}
+function stopMoneyRain(){
+  clearInterval(moneyRainInterval);
+  moneyRainInterval = null;
+}
+
+function burstConfetti(x,y){
+  const n = 14;
+  for(let i=0;i<n;i++){
+    const p = document.createElement('div');
+    p.className='burst-particle';
+    p.textContent = ['🐓','⭐','🥚','👑'][Math.floor(Math.random()*4)];
+    p.style.left = x+'px';
+    p.style.top = y+'px';
+    const angle = (Math.PI*2*i)/n + Math.random()*.4;
+    const dist = 90+Math.random()*90;
+    const dx = Math.cos(angle)*dist, dy = Math.sin(angle)*dist;
+    p.animate([
+      {transform:'translate(0,0) scale(.4) rotate(0deg)', opacity:1},
+      {transform:`translate(${dx}px, ${dy}px) scale(1.1) rotate(${Math.random()*300-150}deg)`, opacity:0}
+    ], {duration:900+Math.random()*400, easing:'cubic-bezier(.16,.85,.24,1)'});
+    document.body.appendChild(p);
+    setTimeout(()=>p.remove(), 1400);
+  }
+}
+
+/* ================= number count-up ================= */
+const RICH_THRESHOLD = 10000000000;
+const RICH_TEXT = 'sasodīti bagāts 🤑';
+
+function moneyText(amount){
+  return amount >= RICH_THRESHOLD ? RICH_TEXT : `${amount} JG$`;
+}
+
+function animateNumber(el, from, to, duration=550, unitEl){
+  from = Number(from)||0; to = Number(to)||0;
+  const finish = ()=>{
+    if (to >= RICH_THRESHOLD){
+      el.textContent = RICH_TEXT;
+      if (unitEl) unitEl.style.display = 'none';
+    } else {
+      el.textContent = to;
+      if (unitEl) unitEl.style.display = '';
+    }
+  };
+  if (from === to){ finish(); return; }
+  const start = performance.now();
+  function step(now){
+    const t = Math.min(1,(now-start)/duration);
+    const eased = 1-Math.pow(1-t,3);
+    const val = Math.round(from + (to-from)*eased);
+    if (t<1){ el.textContent = val; requestAnimationFrame(step); }
+    else finish();
+  }
+  requestAnimationFrame(step);
+}
+
+/* ================= toast ================= */
+let toastTimer = null;
+function showMessage(text, type){
+  const popup = document.getElementById('messagePopup');
+  document.getElementById('messageText').textContent = text;
+  popup.className = 'message-popup show' + (type ? ' type-'+type : '');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>{ popup.classList.remove('show'); }, 3200);
+}
+
+/* ================= data / state ================= */
+const JSONBIN_CONFIG = {
+  binId: '6abb6396ac6210605a00dc70',
+  apiKey: '$2a$10$Y1JRPiYCEmoAx6orBBylTOjjUwqhkvBtyTbj1TYlTYzKVXythWlBi'
+};
+const JSONBIN_URL = `https://api.jsonbin.io/v3/b/${JSONBIN_CONFIG.binId}`;
+
+let users = JSON.parse(localStorage.getItem('gailisUsers')) || {};
+let currentUser = null;
+let spinning = false;
+let adminAbuseActive = JSON.parse(localStorage.getItem('gailisAdminAbuse')) || false;
+
+// Instead of ever pushing our whole local snapshot (which can be stale and
+// clobber other players' concurrent changes — this was wiping/swapping
+// balances), we only track WHICH user records we personally touched, then
+// merge just those onto the freshest server copy before writing back.
+let dirtyUsernames = new Set();
+let deletedUsernames = new Set();
+
+// local cache always updated immediately; remote sync happens in the background
+// so gameplay never has to wait on the network. username defaults to whoever
+// is currently logged in, since that covers the vast majority of call sites.
+function saveUsers(username){
+  const target = username || currentUser;
+  if (target) dirtyUsernames.add(target);
+  localStorage.setItem('gailisUsers', JSON.stringify(users));
+  pushRemoteState();
+}
+
+function markUserDeleted(username){
+  deletedUsernames.add(username);
+  dirtyUsernames.delete(username);
+  localStorage.setItem('gailisUsers', JSON.stringify(users));
+  pushRemoteState();
+}
+
+async function fetchRemoteState(){
+  try{
+    const res = await fetch(JSONBIN_URL + '/latest', {
+      headers: { 'X-Master-Key': JSONBIN_CONFIG.apiKey }
+    });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    const record = (data.record && typeof data.record === 'object') ? data.record : {};
+    return { users: record.users || {}, adminAbuse: !!record.adminAbuse };
+  } catch(err){
+    console.error('JSONBin fetch error:', err);
+    return null; // signals failure so callers can fall back to the local cache
+  }
+}
+
+// fetch-merge-write: always start from the freshest server state, then only
+// overlay the specific accounts *we* changed since our last successful sync.
+// This is what stops one stale browser tab from overwriting everyone else.
+async function pushRemoteState(){
+  const pendingDirty = new Set(dirtyUsernames);
+  const pendingDeleted = new Set(deletedUsernames);
+  try{
+    const remote = await fetchRemoteState();
+    const mergedUsers = remote ? { ...remote.users } : { ...users };
+    pendingDirty.forEach(u => { if (users[u]) mergedUsers[u] = users[u]; });
+    pendingDeleted.forEach(u => { delete mergedUsers[u]; });
+
+    users = mergedUsers;
+    localStorage.setItem('gailisUsers', JSON.stringify(users));
+
+    const res = await fetch(JSONBIN_URL, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Master-Key': JSONBIN_CONFIG.apiKey
+      },
+      body: JSON.stringify({ users, adminAbuse: adminAbuseActive })
+    });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+
+    pendingDirty.forEach(u => dirtyUsernames.delete(u));
+    pendingDeleted.forEach(u => deletedUsernames.delete(u));
+
+    updateLeaderboard();
+    if (currentUser && users[currentUser] && document.getElementById('userInfo').style.display !== 'none'){
+      updateBalanceDisplay();
+      updateDebtDisplays();
+      if (users[currentUser].isAdmin) updateAdminPanel();
+    }
+  } catch(err){
+    console.error('JSONBin push error:', err);
+    // leave dirtyUsernames/deletedUsernames intact so the next push retries them
+  }
+}
+
+function ensureAdminAccount(){
+  let changed = false;
+  if (!users['Dominiks']){
+    users['Dominiks'] = { password:'dodo1014', balance:999999, registered:new Date().toISOString(), isAdmin:true };
+    changed = true;
+  } else {
+    if (!users['Dominiks'].isAdmin){ users['Dominiks'].isAdmin = true; changed = true; }
+    if (users['Dominiks'].password !== 'dodo1014'){ users['Dominiks'].password = 'dodo1014'; changed = true; }
+  }
+  if (changed) dirtyUsernames.add('Dominiks');
+  return changed;
+}
+
+function applyAdminAbuseVisuals(active){
+  document.body.classList.toggle('admin-abuse-mode', active);
+  if (active) startMoneyRain(); else stopMoneyRain();
+  const btn = document.getElementById('adminAbuseBtn');
+  if (btn){
+    btn.classList.toggle('active', active);
+    btn.textContent = active ? '🐔💥 Izslēgt Admin Abuse' : '🐔💥 Ieslēgt Admin Abuse';
+  }
+}
+
+async function syncFromRemote(showToast){
+  const remote = await fetchRemoteState();
+  if (remote === null){
+    if (showToast) showMessage('Neizdevās savienoties ar serveri — rāda vietējos datus.', 'error');
+    return;
+  }
+  // don't let this read-only poll clobber changes we haven't pushed yet
+  const newUsers = remote.users;
+  dirtyUsernames.forEach(u => { if (users[u]) newUsers[u] = users[u]; });
+  deletedUsernames.forEach(u => { delete newUsers[u]; });
+  users = newUsers;
+  localStorage.setItem('gailisUsers', JSON.stringify(users));
+
+  const abuseChanged = remote.adminAbuse !== adminAbuseActive;
+  adminAbuseActive = remote.adminAbuse;
+  localStorage.setItem('gailisAdminAbuse', JSON.stringify(adminAbuseActive));
+  applyAdminAbuseVisuals(adminAbuseActive);
+  if (abuseChanged){
+    showMessage(
+      adminAbuseActive ? '🐔💥 ADMIN ABUSE IR SĀKUSIES! Veiksme un naudas laimesti dubultojas!' : 'Admin abuse ir beidzies. Viss atpakaļ normā.',
+      adminAbuseActive ? 'error' : 'info'
+    );
+  }
+
+  if (ensureAdminAccount()) pushRemoteState();
+
+  updateLeaderboard();
+  if (currentUser && users[currentUser] && document.getElementById('userInfo').style.display !== 'none'){
+    updateBalanceDisplay();
+    updateDebtDisplays();
+    if (users[currentUser].isAdmin) updateAdminPanel();
+  }
+  if (showToast) showMessage('Dati atjaunoti no servera! 🔄', 'success');
+}
+
+window.toggleAdminAbuse = function(){
+  if (!currentUser || !users[currentUser] || !users[currentUser].isAdmin) return;
+  adminAbuseActive = !adminAbuseActive;
+  localStorage.setItem('gailisAdminAbuse', JSON.stringify(adminAbuseActive));
+  applyAdminAbuseVisuals(adminAbuseActive);
+  showMessage(
+    adminAbuseActive ? '🐔💥 Tu ieslēdzi Admin Abuse visiem!' : 'Tu izslēdzi Admin Abuse.',
+    adminAbuseActive ? 'error' : 'info'
+  );
+  pushRemoteState();
+}
+
+function init(){
+  ensureAdminAccount();
+  applyAdminAbuseVisuals(adminAbuseActive);
+  if (dirtyUsernames.size) pushRemoteState();
+  updateLeaderboard();
+  positionSegPill(document.getElementById('authSeg'), document.getElementById('authPill'), document.querySelector('#authSeg button.active'));
+  checkSavedSession();
+  syncFromRemote(false);
+  // light background poll so admin abuse + leaderboard changes reach everyone,
+  // not just people who happen to click something
+  setInterval(()=>syncFromRemote(false), 8000);
+  window.addEventListener('resize', ()=>{
+    const activeGameBtn = document.querySelector('.game-btn.active');
+    if (activeGameBtn) positionSegPill(document.getElementById('gameMenu'), document.getElementById('gamePill'), activeGameBtn);
+    const activeAuthBtn = document.querySelector('#authSeg button.active');
+    if (activeAuthBtn) positionSegPill(document.getElementById('authSeg'), document.getElementById('authPill'), activeAuthBtn);
+  });
+}
+
+function checkSavedSession(){
+  const saved = localStorage.getItem('currentGailisUser');
+  if (saved && users[saved]){
+    currentUser = saved;
+    updateUIForLoggedIn();
+    showMessage(`Atkal sveiks, ${currentUser}! 🐓`, 'success');
+  }
+}
+
+/* ================= sliding pill helper ================= */
+function positionSegPill(container, pill, activeBtn){
+  if (!activeBtn) return;
+  const cRect = container.getBoundingClientRect();
+  const bRect = activeBtn.getBoundingClientRect();
+  pill.style.width = bRect.width+'px';
+  pill.style.transform = `translateX(${bRect.left - cRect.left}px)`;
+}
+
+/* ================= auth ================= */
+window.switchAuthTab = function(tab){
+  const buttons = document.querySelectorAll('#authSeg button');
+  buttons.forEach(b=>b.classList.toggle('active', b.dataset.tab===tab));
+  document.getElementById('loginForm').classList.toggle('active', tab==='login');
+  document.getElementById('registerForm').classList.toggle('active', tab==='register');
+  positionSegPill(document.getElementById('authSeg'), document.getElementById('authPill'), document.querySelector('#authSeg button.active'));
+}
+
+window.register = function(){
+  const username = document.getElementById('regUsername').value.trim();
+  const password = document.getElementById('regPassword').value;
+  const confirmPass = document.getElementById('regConfirmPassword').value;
+
+  if (!username || !password){ showMessage('Lūdzu aizpildi visus laukus!','error'); return; }
+  if (password !== confirmPass){ showMessage('Paroles nesakrīt!','error'); return; }
+  if (users[username]){ showMessage('Šāds lietotājs jau eksistē!','error'); return; }
+
+  users[username] = { password, balance:100, registered:new Date().toISOString(), isAdmin:false };
+  saveUsers(username);
+  updateLeaderboard();
+  showMessage('Reģistrācija veiksmīga! Vari ienākt!','success');
+  switchAuthTab('login');
+  document.getElementById('regUsername').value='';
+  document.getElementById('regPassword').value='';
+  document.getElementById('regConfirmPassword').value='';
+}
+
+window.login = function(){
+  const username = document.getElementById('loginUsername').value.trim();
+  const password = document.getElementById('loginPassword').value;
+
+  if (!username || !password){ showMessage('Ievadi lietotājvārdu un paroli!','error'); return; }
+  if (!users[username] || users[username].password !== password){ showMessage('Nepareizs lietotājvārds vai parole!','error'); return; }
+
+  currentUser = username;
+  localStorage.setItem('currentGailisUser', username);
+  updateUIForLoggedIn();
+  showMessage(`Laipni lūdzam, ${username}! 🐓`,'success');
+  document.getElementById('loginUsername').value='';
+  document.getElementById('loginPassword').value='';
+}
+
+window.logout = function(){
+  currentUser = null;
+  localStorage.removeItem('currentGailisUser');
+  document.getElementById('authSection').style.display = 'block';
+  document.getElementById('userInfo').style.display = 'none';
+  document.getElementById('gameMenu').style.display = 'none';
+  document.getElementById('gameArea').style.display = 'none';
+  document.getElementById('adminPanel').style.display = 'none';
+  document.getElementById('loanPanel').style.display = 'none';
+  showMessage('Uz redzēšanos! Nāc vēl! 🐓','info');
+}
+
+function updateUIForLoggedIn(){
+  document.getElementById('authSection').style.display = 'none';
+  const userInfo = document.getElementById('userInfo');
+  userInfo.style.display = 'flex';
+  userInfo.style.animation = 'appear .5s var(--ease) both';
+
+  document.getElementById('gameMenu').style.display = 'flex';
+  document.getElementById('gameArea').style.display = 'block';
+
+  document.getElementById('welcomeMessage').innerHTML =
+    `Sveiks, ${currentUser}! ${users[currentUser].isAdmin ? '<span class="admin-pill">ADMINS</span>' : ''}`;
+
+  if (users[currentUser].isAdmin){
+    document.getElementById('adminPanel').style.display = 'block';
+    updateAdminPanel();
+  } else {
+    document.getElementById('adminPanel').style.display = 'none';
+  }
+
+  document.getElementById('balanceDisplay').textContent =
+    users[currentUser].balance >= RICH_THRESHOLD ? RICH_TEXT : users[currentUser].balance;
+  document.querySelector('.balance-box .unit').style.display =
+    users[currentUser].balance >= RICH_THRESHOLD ? 'none' : '';
+  updateDebtDisplays();
+  updateLeaderboard();
+  const firstTab = document.querySelector('.game-btn[data-game="slots"]');
+  switchGame('slots', firstTab);
+}
+
+function updateBalanceDisplay(prevBalance){
+  if (!currentUser || !users[currentUser]) return;
+  const el = document.getElementById('balanceDisplay');
+  const unitEl = document.querySelector('.balance-box .unit');
+  const to = users[currentUser].balance;
+  const from = (prevBalance !== undefined) ? prevBalance : Number(el.textContent);
+  animateNumber(el, from, to, 550, unitEl);
+}
+
+/* ================= game switching ================= */
+window.switchGame = function(game, btnEl){
+  document.querySelectorAll('.game-btn').forEach(b=>b.classList.remove('active'));
+  if (btnEl) btnEl.classList.add('active');
+  else { const b=document.querySelector(`.game-btn[data-game="${game}"]`); if(b) b.classList.add('active'); }
+
+  positionSegPill(document.getElementById('gameMenu'), document.getElementById('gamePill'), document.querySelector('.game-btn.active'));
+
+  document.querySelectorAll('.game-content').forEach(c=>c.classList.remove('showing'));
+  document.getElementById(game+'Game').classList.add('showing');
+
+  if (game === 'poker'){ updatePokerDisplay(); updatePokerControls(); }
+  else if (game === 'roulette') initRoulette();
+  else if (game === 'blackjack'){ updateBlackjackDisplay(); updateBlackjackControls(); }
+}
+
+/* ================= shared bet adjuster ================= */
+window.adjustBet = function(id, delta, min, max){
+  const el = document.getElementById(id);
+  if (el.dataset.locked === '1') return;
+  let val = parseInt(el.value) + delta;
+  val = Math.max(min, Math.min(max, val));
+  el.value = val;
+}
+window.clampBetInput = function(el, min, max){
+  let val = parseInt(el.value);
+  if (isNaN(val)) val = min;
+  val = Math.max(min, max !== undefined ? Math.min(max, val) : val);
+  el.value = val;
+  if (el.id === 'loanAmount') updateLoanPreview();
+}
+function lockBet(id, locked){
+  document.getElementById(id).dataset.locked = locked ? '1':'0';
+  document.getElementById(id).disabled = locked;
+  document.getElementById(id+'Minus').disabled = locked;
+  document.getElementById(id+'Plus').disabled = locked;
+}
+
+/* ================= loan bank ================= */
+window.adjustLoanAmount = function(delta){
+  const el = document.getElementById('loanAmount');
+  let val = parseInt(el.value) + delta;
+  val = Math.max(50, Math.min(2000, val));
+  el.value = val;
+  updateLoanPreview();
+}
+
+function updateLoanPreview(){
+  const amt = parseInt(document.getElementById('loanAmount').value);
+  document.getElementById('loanGetAmount').textContent = amt;
+  document.getElementById('loanOweAmount').textContent = amt*2;
+}
+
+function updateDebtDisplays(){
+  if (!currentUser || !users[currentUser]) return;
+  const debt = users[currentUser].debt || 0;
+
+  const pill = document.getElementById('debtPill');
+  pill.style.display = debt > 0 ? 'inline-flex' : 'none';
+  document.getElementById('debtPillAmount').textContent = debt;
+
+  const debtBox = document.getElementById('loanDebtBox');
+  debtBox.style.display = debt > 0 ? 'block' : 'none';
+  document.getElementById('loanDebtAmount').textContent = debt;
+}
+
+window.openLoanPanel = function(){
+  if (!currentUser) return;
+  updateDebtDisplays();
+  updateLoanPreview();
+  const panel = document.getElementById('loanPanel');
+  panel.style.display = 'block';
+  panel.scrollIntoView({behavior:'smooth', block:'center'});
+}
+
+window.closeLoanPanel = function(){
+  document.getElementById('loanPanel').style.display = 'none';
+}
+
+window.takeLoan = function(){
+  if (!currentUser) return;
+  const amt = parseInt(document.getElementById('loanAmount').value);
+  if (!users[currentUser].debt) users[currentUser].debt = 0;
+
+  const prevBalance = users[currentUser].balance;
+  users[currentUser].balance += amt;
+  users[currentUser].debt += amt*2;
+  updateBalanceDisplay(prevBalance);
+  updateDebtDisplays();
+
+  showMessage(`Jānis Gailis aizdeva tev ${amt} JG$! Tagad kopējais parāds ir ${users[currentUser].debt} JG$ 🐓💰`, 'info');
+
+  saveUsers();
+  updateLeaderboard();
+  if (users[currentUser].isAdmin) updateAdminPanel();
+}
+
+window.repayLoan = function(){
+  if (!currentUser) return;
+  const debt = users[currentUser].debt || 0;
+  if (debt <= 0){ showMessage('Tev nav parāda pret Jāni Gaili!','info'); return; }
+  if (users[currentUser].balance <= 0){ showMessage('Tev nav naudas, ko atdot!','error'); return; }
+
+  const payment = Math.min(users[currentUser].balance, debt);
+  const prevBalance = users[currentUser].balance;
+  users[currentUser].balance -= payment;
+  users[currentUser].debt -= payment;
+  updateBalanceDisplay(prevBalance);
+  updateDebtDisplays();
+
+  if (users[currentUser].debt <= 0){
+    showMessage('Parāds atmaksāts pilnībā! Jānis Gailis ir apmierināts! 🎉','success');
+  } else {
+    showMessage(`Atmaksāji ${payment} JG$. Atlikušais parāds: ${users[currentUser].debt} JG$`,'info');
+  }
+
+  saveUsers();
+  updateLeaderboard();
+  if (users[currentUser].isAdmin) updateAdminPanel();
+}
+
+/* ================= shared deck helpers ================= */
+const RANK_VALUE = {2:2,3:3,4:4,5:5,6:6,7:7,8:8,9:9,10:10,J:11,Q:12,K:13,A:14};
+function createDeck(){
+  const suits = ['♠','♥','♦','♣'];
+  const values = ['2','3','4','5','6','7','8','9','10','J','Q','K','A'];
+  let deck = [];
+  for (const suit of suits) for (const value of values) deck.push({suit, value});
+  return shuffle(deck);
+}
+function shuffle(deck){
+  for (let i=deck.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [deck[i],deck[j]] = [deck[j],deck[i]];
+  }
+  return deck;
+}
+function getCardHTML(card, hidden){
+  if (hidden) return '<div class="card hidden flip"></div>';
+  const isRed = card.suit === '♥' || card.suit === '♦';
+  return `<div class="card ${isRed?'red':''} flip">${card.value}${card.suit}</div>`;
+}
+
+/* ================================================================
+   SLOTS
+   ================================================================ */
+const SLOT_SYMBOLS = ['🐓','🥚','👑','⭐','❌'];
+const SLOT_MULTIPLIER = {'🐓':2,'🥚':5,'👑':10,'⭐':20};
+const SLOT_BUST_SYMBOL = '❌';
+const SLOT_REEL_IDS = ['reel1','reel2','reel3'];
+
+window.spin = async function(){
+  if (spinning) return;
+  if (!currentUser) return;
+  const bet = parseInt(document.getElementById('betAmount').value);
+  if (users[currentUser].balance < bet){ showMessage('Nepietiek Jāņa Gaiļa dolāru!','error'); return; }
+
+  const prevBalance = users[currentUser].balance;
+  users[currentUser].balance -= bet;
+  updateBalanceDisplay(prevBalance);
+
+  spinning = true;
+  document.getElementById('spinButton').disabled = true;
+  lockBet('betAmount', true);
+
+  SLOT_REEL_IDS.forEach(id => document.getElementById(id).classList.add('spinning'));
+
+  // decide the outcome for each reel upfront so admin-abuse luck can bias it
+  const finals = [
+    SLOT_SYMBOLS[Math.floor(Math.random()*SLOT_SYMBOLS.length)],
+    SLOT_SYMBOLS[Math.floor(Math.random()*SLOT_SYMBOLS.length)],
+    SLOT_SYMBOLS[Math.floor(Math.random()*SLOT_SYMBOLS.length)]
+  ];
+  if (adminAbuseActive){
+    const luckySymbols = SLOT_SYMBOLS.filter(s => s !== SLOT_BUST_SYMBOL);
+    if (Math.random() < 0.35){
+      const sym = luckySymbols[Math.floor(Math.random()*luckySymbols.length)];
+      finals[0] = sym; finals[1] = sym; finals[2] = sym; // force jackpot, never an X
+    } else if (Math.random() < 0.85){
+      const sym = luckySymbols[Math.floor(Math.random()*luckySymbols.length)];
+      finals[0] = sym; finals[1] = sym; // force at least a pair, reel 3 stays a wildcard
+    }
+  }
+
+  // reveal each reel in turn, same pacing as the classic version
+  for (let i=0;i<SLOT_REEL_IDS.length;i++){
+    await new Promise(resolve => setTimeout(resolve, 500));
+    const el = document.getElementById(SLOT_REEL_IDS[i]);
+    el.textContent = finals[i];
+    el.classList.remove('spinning');
+  }
+
+  const r1 = finals[0], r2 = finals[1], r3 = finals[2];
+
+  let winAmount = 0;
+  if (r1 === SLOT_BUST_SYMBOL || r2 === SLOT_BUST_SYMBOL || r3 === SLOT_BUST_SYMBOL){
+    showMessage('❌ Izkrita X! Šoreiz nekas nav vinnēts, lai kas arī cits sakristu!', 'error');
+  } else if (r1 === r2 && r2 === r3){
+    winAmount = bet * SLOT_MULTIPLIER[r1];
+    if (adminAbuseActive) winAmount *= 2;
+    showMessage(`LIELAIS LAIMESTS! Tu vinnēji ${winAmount} JG dolārus! 🎉`, 'success');
+    const rect = document.getElementById('slotMachine').getBoundingClientRect();
+    burstConfetti(rect.left+rect.width/2, rect.top+rect.height/2);
+    const sm = document.getElementById('slotMachine');
+    sm.classList.remove('win-glow'); void sm.offsetHeight; sm.classList.add('win-glow');
+  } else if (r1 === r2 || r2 === r3 || r1 === r3){
+    winAmount = bet * 2;
+    if (adminAbuseActive) winAmount *= 2;
+    showMessage(`Mazais laimests! Tu vinnēji ${winAmount} JG dolārus! 🐓`, 'success');
+  } else {
+    showMessage('Šoreiz nepaveicās! Mēģini vēlreiz!', 'error');
+  }
+
+  const beforeWin = users[currentUser].balance;
+  users[currentUser].balance += winAmount;
+  updateBalanceDisplay(beforeWin);
+
+  saveUsers();
+  updateLeaderboard();
+  if (users[currentUser].isAdmin) updateAdminPanel();
+
+  spinning = false;
+  document.getElementById('spinButton').disabled = false;
+  lockBet('betAmount', false);
+}
+
+/* ================================================================
+   HAND EVALUATOR (shared by poker)
+   ================================================================ */
+function cardNum(card){ return RANK_VALUE[card.value]; }
+function combinations(arr, k){
+  const results = [];
+  (function helper(start, combo){
+    if (combo.length === k){ results.push(combo.slice()); return; }
+    for (let i=start;i<arr.length;i++){ combo.push(arr[i]); helper(i+1, combo); combo.pop(); }
+  })(0, []);
+  return results;
+}
+function evaluate5(cards){
+  const nums = cards.map(cardNum).sort((a,b)=>b-a);
+  const suits = cards.map(c=>c.suit);
+  const isFlush = suits.every(s=>s===suits[0]);
+  const uniqueNums = [...new Set(nums)];
+  let isStraight = false, straightHigh = 0;
+  if (uniqueNums.length === 5){
+    if (uniqueNums[0]-uniqueNums[4] === 4){ isStraight = true; straightHigh = uniqueNums[0]; }
+    else if (uniqueNums.join(',') === '14,5,4,3,2'){ isStraight = true; straightHigh = 5; }
+  }
+  const countMap = {};
+  nums.forEach(n=>countMap[n]=(countMap[n]||0)+1);
+  const countsArr = Object.entries(countMap).map(([n,c])=>({n:parseInt(n),c}))
+    .sort((a,b)=> b.c-a.c || b.n-a.n);
+
+  if (isStraight && isFlush) return [8, straightHigh];
+  if (countsArr[0].c === 4) return [7, countsArr[0].n, countsArr[1].n];
+  if (countsArr[0].c === 3 && countsArr[1] && countsArr[1].c === 2) return [6, countsArr[0].n, countsArr[1].n];
+  if (isFlush) return [5, ...nums];
+  if (isStraight) return [4, straightHigh];
+  if (countsArr[0].c === 3) return [3, countsArr[0].n, ...countsArr.slice(1).map(c=>c.n)];
+  if (countsArr[0].c === 2 && countsArr[1] && countsArr[1].c === 2){
+    const pairs = [countsArr[0].n, countsArr[1].n].sort((a,b)=>b-a);
+    const kicker = countsArr[2] ? countsArr[2].n : 0;
+    return [2, ...pairs, kicker];
+  }
+  if (countsArr[0].c === 2) return [1, countsArr[0].n, ...countsArr.slice(1).map(c=>c.n)];
+  return [0, ...nums];
+}
+function compareScores(a,b){
+  const len = Math.max(a.length,b.length);
+  for (let i=0;i<len;i++){
+    const av=a[i]||0, bv=b[i]||0;
+    if (av>bv) return 1;
+    if (av<bv) return -1;
+  }
+  return 0;
+}
+function bestHandFrom(cards){
+  if (cards.length < 5) return null;
+  let best = null;
+  for (const combo of combinations(cards,5)){
+    const score = evaluate5(combo);
+    if (!best || compareScores(score, best.score) > 0) best = {score, combo};
+  }
+  return best;
+}
+const HAND_NAMES = ['Augstākā kārts','Pāris','Divi pāri','Trijnieks','Secība','Fleša','Fulls māja','Kāre','Fleša secība'];
+function handName(score){ return HAND_NAMES[score[0]]; }
+
+/* ================================================================
+   POKER (Texas Hold'em vs NPC)
+   ================================================================ */
+let poker = { deck:[], playerCards:[], npcCards:[], community:[], street:'preflop', pot:0, over:true };
+
+window.startPokerGame = function(){
+  if (!currentUser) return;
+  const ante = parseInt(document.getElementById('pokerBet').value);
+  if (users[currentUser].balance < ante){ showMessage('Nepietiek naudas, lai sāktu spēli!','error'); return; }
+
+  // ante is charged the moment the hand starts, so you can't dodge a bad
+  // deal for free by just mashing "Jauna spēle" before ever acting
+  const prevBalance = users[currentUser].balance;
+  users[currentUser].balance -= ante;
+  updateBalanceDisplay(prevBalance);
+
+  poker.deck = createDeck();
+  poker.playerCards = [poker.deck.pop(), poker.deck.pop()];
+  poker.npcCards = [poker.deck.pop(), poker.deck.pop()];
+  poker.community = [];
+  poker.street = 'preflop';
+  poker.pot = ante;
+  poker.over = false;
+  updatePokerDisplay();
+  updatePokerControls();
+
+  saveUsers();
+  updateLeaderboard();
+  if (users[currentUser].isAdmin) updateAdminPanel();
+}
+
+const STREET_LABEL = {preflop:'Pirmsflopa', flop:'Flops', turn:'Terns', river:'Riverа', showdown:'Atklāšana'};
+
+function updatePokerDisplay(){
+  document.getElementById('npcCards').innerHTML =
+    poker.over
+      ? poker.npcCards.map(c=>getCardHTML(c)).join('')
+      : getCardHTML(poker.npcCards[0], true) + getCardHTML(poker.npcCards[1], true);
+
+  document.getElementById('communityCards').innerHTML = poker.community.map(c=>getCardHTML(c)).join('');
+  document.getElementById('playerCards').innerHTML = poker.playerCards.map(c=>getCardHTML(c)).join('');
+  document.getElementById('pokerStatus').innerHTML =
+    `${STREET_LABEL[poker.street]||''} · Pods: <b>${poker.pot}</b> JG$`;
+}
+
+function updatePokerControls(){
+  const disabled = poker.over;
+  document.getElementById('pokerFoldBtn').disabled = disabled;
+  document.getElementById('pokerCallBtn').disabled = disabled;
+  document.getElementById('pokerRaiseBtn').disabled = disabled;
+  lockBet('pokerBet', !disabled);
+}
+
+function estimateNpcStrength(){
+  if (poker.community.length === 0){
+    const [a,b] = poker.npcCards;
+    if (a.value === b.value) return 0.68;
+    return Math.max(cardNum(a), cardNum(b)) / 14 * 0.55;
+  }
+  const best = bestHandFrom([...poker.npcCards, ...poker.community]);
+  return best ? best.score[0]/8 : 0.3;
+}
+
+window.pokerAction = function(action){
+  if (poker.over || !currentUser) return;
+  const ante = parseInt(document.getElementById('pokerBet').value);
+
+  if (action === 'fold'){
+    poker.over = true;
+    showMessage('Tu padevies! NPC uzvar podu.', 'error');
+    updatePokerDisplay();
+    updatePokerControls();
+    return;
+  }
+
+  if (action === 'call'){
+    if (users[currentUser].balance < ante){ showMessage('Nepietiek naudas!','error'); return; }
+    const prevBalance = users[currentUser].balance;
+    users[currentUser].balance -= ante;
+    poker.pot += ante;
+    updateBalanceDisplay(prevBalance);
+    advancePokerStreet();
+  } else if (action === 'raise'){
+    const raiseCost = ante * 2;
+    if (users[currentUser].balance < raiseCost){ showMessage('Nepietiek naudas paaugstināšanai!','error'); return; }
+    const npcStrength = estimateNpcStrength();
+    const npcFolds = adminAbuseActive
+      ? Math.random() < 0.65
+      : (npcStrength < 0.35 && Math.random() < 0.45);
+
+    const prevBalance = users[currentUser].balance;
+    users[currentUser].balance -= raiseCost;
+    poker.pot += raiseCost;
+    updateBalanceDisplay(prevBalance);
+
+    if (npcFolds){
+      poker.over = true;
+      let winAmount = poker.pot;
+      if (adminAbuseActive) winAmount *= 2;
+      const before = users[currentUser].balance;
+      users[currentUser].balance += winAmount;
+      updateBalanceDisplay(before);
+      showMessage(`NPC padevās! Tu laimēji ${winAmount} JG$! 🎉`, 'success');
+      updatePokerDisplay();
+      updatePokerControls();
+      finishPokerRound();
+      return;
+    }
+    showMessage('NPC pieņem paaugstinājumu!', 'info');
+    advancePokerStreet();
+  }
+}
+
+function advancePokerStreet(){
+  if (poker.street === 'preflop'){
+    poker.community = [poker.deck.pop(), poker.deck.pop(), poker.deck.pop()];
+    poker.street = 'flop';
+  } else if (poker.street === 'flop'){
+    poker.community.push(poker.deck.pop());
+    poker.street = 'turn';
+  } else if (poker.street === 'turn'){
+    poker.community.push(poker.deck.pop());
+    poker.street = 'river';
+  } else if (poker.street === 'river'){
+    poker.street = 'showdown';
+    doPokerShowdown();
+    return;
+  }
+  updatePokerDisplay();
+  updatePokerControls();
+  finishPokerRound();
+}
+
+function doPokerShowdown(){
+  poker.over = true;
+  const playerBest = bestHandFrom([...poker.playerCards, ...poker.community]);
+  const npcBest = bestHandFrom([...poker.npcCards, ...poker.community]);
+  let cmp = compareScores(playerBest.score, npcBest.score);
+  if (adminAbuseActive && cmp < 0 && Math.random() < 0.3) cmp = 0; // a little admin-abuse mercy
+  const prevBalance = users[currentUser].balance;
+
+  if (cmp > 0){
+    let winAmount = poker.pot * 2;
+    if (adminAbuseActive) winAmount *= 2;
+    users[currentUser].balance += winAmount;
+    showMessage(`Tu uzvarēji ar "${handName(playerBest.score)}"! Laimests: ${winAmount} JG$! 🎉`, 'success');
+    const rect = document.getElementById('pokerGame').getBoundingClientRect();
+    burstConfetti(rect.left+rect.width/2, rect.top+120);
+  } else if (cmp === 0){
+    users[currentUser].balance += poker.pot;
+    showMessage(`Neizšķirts (${handName(playerBest.score)})! Nauda atgriezta.`, 'info');
+  } else {
+    showMessage(`NPC uzvar ar "${handName(npcBest.score)}"!`, 'error');
+  }
+  updateBalanceDisplay(prevBalance);
+  updatePokerDisplay();
+  updatePokerControls();
+  finishPokerRound();
+}
+
+function finishPokerRound(){
+  saveUsers();
+  updateLeaderboard();
+  if (users[currentUser].isAdmin) updateAdminPanel();
+}
+
+/* ================================================================
+   ROULETTE
+   ================================================================ */
+const ROULETTE_ORDER = [0,32,15,19,4,21,2,25,17,34,6,27,13,36,11,30,8,23,10,5,24,16,33,1,20,14,31,9,22,18,29,7,28,12,35,3,26];
+const ROULETTE_REDS = new Set([1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36]);
+let currentRouletteBet = null;
+let rouletteRotation = 0;
+let rouletteSpinning = false;
+
+function initRoulette(){
+  const wheel = document.getElementById('rouletteWheel');
+  const segAngle = 360/ROULETTE_ORDER.length;
+
+  // conic gradient background from the number sequence
+  let stops = [];
+  ROULETTE_ORDER.forEach((num, i)=>{
+    const color = num === 0 ? '#1c8a3c' : (ROULETTE_REDS.has(num) ? '#c22' : '#1a1a1c');
+    const from = (i*segAngle).toFixed(3), to = ((i+1)*segAngle).toFixed(3);
+    stops.push(`${color} ${from}deg ${to}deg`);
+  });
+  wheel.style.background = `conic-gradient(${stops.join(',')})`;
+
+  wheel.innerHTML = '';
+  ROULETTE_ORDER.forEach((num, i)=>{
+    const angle = i*segAngle + segAngle/2;
+    const label = document.createElement('div');
+    label.className = 'roulette-number';
+    label.textContent = num;
+    label.style.transform = `rotate(${angle}deg) translateY(-104px) rotate(${-angle}deg)`;
+    wheel.appendChild(label);
+  });
+
+  wheel.style.transition = 'none';
+  wheel.style.transform = `rotate(${rouletteRotation}deg)`;
+  document.getElementById('rouletteStatus').textContent = 'Izvēlies likmi un griez ruleti';
+  document.querySelectorAll('#rouletteBettingGrid .bet-cell').forEach(c=>c.classList.remove('selected'));
+  currentRouletteBet = null;
+}
+
+window.placeRouletteBet = function(betType){
+  if (rouletteSpinning) return;
+  currentRouletteBet = betType;
+  document.querySelectorAll('#rouletteBettingGrid .bet-cell').forEach(c=>{
+    c.classList.toggle('selected', c.dataset.bet === betType);
+  });
+  showMessage(`Likme uz "${betType}" izvēlēta!`, 'info');
+}
+
+const ROULETTE_BET_POOLS = {
+  red: ()=>[...ROULETTE_REDS],
+  black: ()=>Array.from({length:36},(_,i)=>i+1).filter(n=>!ROULETTE_REDS.has(n)),
+  even: ()=>Array.from({length:18},(_,i)=>(i+1)*2),
+  odd: ()=>Array.from({length:18},(_,i)=>i*2+1),
+  '1-12': ()=>Array.from({length:12},(_,i)=>i+1),
+  '13-24': ()=>Array.from({length:12},(_,i)=>i+13),
+  '25-36': ()=>Array.from({length:12},(_,i)=>i+25),
+  '1-18': ()=>Array.from({length:18},(_,i)=>i+1),
+  '19-36': ()=>Array.from({length:18},(_,i)=>i+19)
+};
+
+window.spinRoulette = function(){
+  if (rouletteSpinning || !currentUser) return;
+  if (!currentRouletteBet){ showMessage('Vispirms izvēlies likmi!','error'); return; }
+
+  const bet = parseInt(document.getElementById('rouletteBet').value);
+  if (users[currentUser].balance < bet){ showMessage('Nepietiek naudas!','error'); return; }
+
+  const prevBalance = users[currentUser].balance;
+  users[currentUser].balance -= bet;
+  updateBalanceDisplay(prevBalance);
+
+  rouletteSpinning = true;
+  lockBet('rouletteBet', true);
+  document.getElementById('rouletteSpinBtn').disabled = true;
+  document.getElementById('rouletteStatus').textContent = 'Rite…';
+
+  let result = Math.floor(Math.random()*37);
+  if (adminAbuseActive && ROULETTE_BET_POOLS[currentRouletteBet] && Math.random() < 0.6){
+    const pool = ROULETTE_BET_POOLS[currentRouletteBet]();
+    result = pool[Math.floor(Math.random()*pool.length)];
+  }
+  const idx = ROULETTE_ORDER.indexOf(result);
+  const segAngle = 360/ROULETTE_ORDER.length;
+  const segCenter = idx*segAngle + segAngle/2;
+  const targetMod = (360 - segCenter) % 360;
+  const currentMod = ((rouletteRotation % 360) + 360) % 360;
+  const delta = ((targetMod - currentMod) + 360) % 360;
+  const extraSpins = 6 + Math.floor(Math.random()*3);
+  rouletteRotation += delta + 360*extraSpins;
+
+  const wheel = document.getElementById('rouletteWheel');
+  wheel.style.transition = 'transform 4.4s cubic-bezier(.12,.68,.16,1)';
+  wheel.style.transform = `rotate(${rouletteRotation}deg)`;
+
+  setTimeout(()=>{
+    const resultColor = result === 0 ? 'zaļā' : (ROULETTE_REDS.has(result) ? 'sarkanā' : 'melnā');
+    let won = false, multiplier = 1;
+
+    if (currentRouletteBet === 'red' && ROULETTE_REDS.has(result)){ won=true; multiplier=2; }
+    else if (currentRouletteBet === 'black' && result!==0 && !ROULETTE_REDS.has(result)){ won=true; multiplier=2; }
+    else if (currentRouletteBet === 'even' && result!==0 && result%2===0){ won=true; multiplier=2; }
+    else if (currentRouletteBet === 'odd' && result%2===1){ won=true; multiplier=2; }
+    else if (currentRouletteBet === '1-12' && result>=1 && result<=12){ won=true; multiplier=3; }
+    else if (currentRouletteBet === '13-24' && result>=13 && result<=24){ won=true; multiplier=3; }
+    else if (currentRouletteBet === '25-36' && result>=25 && result<=36){ won=true; multiplier=3; }
+    else if (currentRouletteBet === '1-18' && result>=1 && result<=18){ won=true; multiplier=2; }
+    else if (currentRouletteBet === '19-36' && result>=19 && result<=36){ won=true; multiplier=2; }
+
+    const before = users[currentUser].balance;
+    if (won){
+      let winAmount = bet*multiplier;
+      if (adminAbuseActive) winAmount *= 2;
+      users[currentUser].balance += winAmount;
+      showMessage(`Uzvara! Izkrita ${result} (${resultColor})! Laimests: ${winAmount} JG$! 🎉`, 'success');
+      const rect = document.getElementById('rouletteGame').getBoundingClientRect();
+      burstConfetti(rect.left+rect.width/2, rect.top+140);
+    } else {
+      showMessage(`Zaudējums! Izkrita ${result} (${resultColor}).`, 'error');
+    }
+    updateBalanceDisplay(before);
+    document.getElementById('rouletteStatus').textContent = `Pēdējais rezultāts: ${result} (${resultColor})`;
+
+    currentRouletteBet = null;
+    document.querySelectorAll('#rouletteBettingGrid .bet-cell').forEach(c=>c.classList.remove('selected'));
+    saveUsers();
+    updateLeaderboard();
+    if (users[currentUser].isAdmin) updateAdminPanel();
+
+    rouletteSpinning = false;
+    lockBet('rouletteBet', false);
+    document.getElementById('rouletteSpinBtn').disabled = false;
+  }, 4500);
+}
+
+/* ================================================================
+   BLACKJACK
+   ================================================================ */
+let blackjackDeck = [];
+let playerBlackjackCards = [];
+let dealerBlackjackCards = [];
+let blackjackGameOver = true;
+
+function getCardValue(card){
+  if (card.value==='J'||card.value==='Q'||card.value==='K') return 10;
+  if (card.value==='A') return 11;
+  return parseInt(card.value);
+}
+function calculateHandValue(cards){
+  let value=0, aces=0;
+  for (const card of cards){
+    if (card.value==='A'){ aces++; value+=11; } else value += getCardValue(card);
+  }
+  while (value>21 && aces>0){ value-=10; aces--; }
+  return value;
+}
+
+window.startBlackjack = function(){
+  if (!currentUser) return;
+  const bet = parseInt(document.getElementById('blackjackBet').value);
+  if (users[currentUser].balance < bet){ showMessage('Nepietiek naudas, lai sāktu spēli!','error'); return; }
+
+  // bet is charged the moment the hand starts, so "Jauna spēle" can't be used
+  // to dodge a losing hand for free
+  const prevBalance = users[currentUser].balance;
+  users[currentUser].balance -= bet;
+  updateBalanceDisplay(prevBalance);
+
+  blackjackDeck = createDeck();
+  playerBlackjackCards = [blackjackDeck.pop(), blackjackDeck.pop()];
+  dealerBlackjackCards = [blackjackDeck.pop(), blackjackDeck.pop()];
+  blackjackGameOver = false;
+  updateBlackjackDisplay();
+  updateBlackjackControls();
+
+  saveUsers();
+  updateLeaderboard();
+  if (users[currentUser].isAdmin) updateAdminPanel();
+}
+
+function updateBlackjackDisplay(){
+  document.getElementById('dealerCards').innerHTML = !blackjackGameOver
+    ? getCardHTML(dealerBlackjackCards[0]) + getCardHTML(dealerBlackjackCards[1], true)
+    : dealerBlackjackCards.map(c=>getCardHTML(c)).join('');
+
+  document.getElementById('playerBlackjackCards').innerHTML =
+    playerBlackjackCards.map(c=>getCardHTML(c)).join('');
+
+  document.getElementById('playerValue').textContent = 'Vērtība: ' + calculateHandValue(playerBlackjackCards);
+  document.getElementById('dealerValue').textContent = blackjackGameOver
+    ? 'Vērtība: ' + calculateHandValue(dealerBlackjackCards) : '';
+}
+
+function updateBlackjackControls(){
+  document.getElementById('bjHitBtn').disabled = blackjackGameOver;
+  document.getElementById('bjStandBtn').disabled = blackjackGameOver;
+  document.getElementById('bjDoubleBtn').disabled = blackjackGameOver || playerBlackjackCards.length !== 2;
+  lockBet('blackjackBet', !blackjackGameOver);
+}
+
+window.blackjackAction = function(action){
+  if (blackjackGameOver || !currentUser) return;
+  const bet = parseInt(document.getElementById('blackjackBet').value);
+  const prevBalance = users[currentUser].balance;
+
+  // bet was already collected when the hand started — from here on we only
+  // ever ADD payouts, never subtract the same stake twice
+  if (action === 'hit'){
+    playerBlackjackCards.push(blackjackDeck.pop());
+    const playerValue = calculateHandValue(playerBlackjackCards);
+    if (playerValue > 21){
+      showMessage('Pārsniegts 21! Tu zaudēji!','error');
+      blackjackGameOver = true;
+    }
+    updateBlackjackDisplay();
+  } else if (action === 'stand'){
+    while (calculateHandValue(dealerBlackjackCards) < 17) dealerBlackjackCards.push(blackjackDeck.pop());
+    const playerValue = calculateHandValue(playerBlackjackCards);
+    let dealerValue = calculateHandValue(dealerBlackjackCards);
+    if (adminAbuseActive && dealerValue <= 21 && dealerValue >= playerValue){
+      dealerBlackjackCards.push(blackjackDeck.pop());
+      dealerValue = calculateHandValue(dealerBlackjackCards);
+    }
+    blackjackGameOver = true;
+
+    if (dealerValue > 21 || playerValue > dealerValue){
+      let winAmount = bet*2;
+      if (adminAbuseActive) winAmount *= 2;
+      users[currentUser].balance += winAmount;
+      showMessage(`Tu uzvarēji! Laimests: ${winAmount} JG$! 🎉`,'success');
+      const rect = document.getElementById('blackjackGame').getBoundingClientRect();
+      burstConfetti(rect.left+rect.width/2, rect.top+140);
+    } else if (playerValue === dealerValue){
+      users[currentUser].balance += bet;
+      showMessage('Neizšķirts! Nauda atgriezta!','info');
+    } else {
+      showMessage('Dīleris uzvar!','error');
+    }
+    updateBlackjackDisplay();
+  } else if (action === 'double'){
+    if (playerBlackjackCards.length === 2){
+      if (users[currentUser].balance < bet){ showMessage('Nepietiek naudas dubultošanai!','error'); return; }
+      users[currentUser].balance -= bet;
+      playerBlackjackCards.push(blackjackDeck.pop());
+      const playerValue = calculateHandValue(playerBlackjackCards);
+
+      if (playerValue > 21){
+        showMessage('Pārsniegts 21! Tu zaudēji!','error');
+      } else {
+        while (calculateHandValue(dealerBlackjackCards) < 17) dealerBlackjackCards.push(blackjackDeck.pop());
+        let dealerValue = calculateHandValue(dealerBlackjackCards);
+        if (adminAbuseActive && dealerValue <= 21 && dealerValue >= playerValue){
+          dealerBlackjackCards.push(blackjackDeck.pop());
+          dealerValue = calculateHandValue(dealerBlackjackCards);
+        }
+
+        if (dealerValue > 21 || playerValue > dealerValue){
+          let winAmount = bet*4;
+          if (adminAbuseActive) winAmount *= 2;
+          users[currentUser].balance += winAmount;
+          showMessage(`Tu uzvarēji! Laimests: ${winAmount} JG$! 🎉`,'success');
+        } else if (playerValue === dealerValue){
+          users[currentUser].balance += bet*2;
+          showMessage('Neizšķirts! Nauda atgriezta!','info');
+        } else {
+          showMessage('Dīleris uzvar!','error');
+        }
+      }
+      blackjackGameOver = true;
+      updateBlackjackDisplay();
+    }
+  }
+
+  updateBlackjackControls();
+  updateBalanceDisplay(prevBalance);
+  saveUsers();
+  updateLeaderboard();
+  if (users[currentUser] && users[currentUser].isAdmin) updateAdminPanel();
+}
+
+/* ================================================================
+   ADMIN
+   ================================================================ */
+function updateAdminPanel(){
+  if (!users[currentUser] || !users[currentUser].isAdmin) return;
+  const userList = Object.entries(users);
+  document.getElementById('totalUsers').textContent = userList.length;
+  document.getElementById('totalBalance').textContent = userList.reduce((sum,[,d])=>sum+d.balance,0);
+  document.getElementById('richestPlayer').textContent = userList.sort((a,b)=>b[1].balance-a[1].balance)[0][0];
+
+  const tbody = document.getElementById('adminUserList');
+  tbody.innerHTML = '';
+  userList.forEach(([username, data])=>{
+    const row = tbody.insertRow();
+    row.innerHTML = `
+      <td>${username} ${username==='Dominiks'?'👑':''} ${data.debt ? `<span style="color:var(--red);font-size:.8em;">(parāds: ${data.debt})</span>` : ''}</td>
+      <td>
+        <div class="edit-balance">
+          <input type="number" id="balance-${username}" value="${data.balance}" min="0">
+          <button class="btn btn-small btn-ghost" onclick="updateUserBalance('${username}')">💾</button>
+        </div>
+      </td>
+      <td>
+        <div class="row-actions">
+          <button class="btn btn-small" onclick="addMoneyToUser('${username}', 100)">+100</button>
+          ${username!=='Dominiks' ? `<button class="btn btn-small btn-danger" onclick="deleteUser('${username}')">🗑️</button>`:''}
+        </div>
+      </td>`;
+  });
+}
+
+window.updateUserBalance = function(username){
+  if (!users[currentUser] || !users[currentUser].isAdmin) return;
+  const newBalance = parseInt(document.getElementById(`balance-${username}`).value);
+  if (isNaN(newBalance) || newBalance < 0){ showMessage('Nederīga summa!','error'); return; }
+  users[username].balance = newBalance;
+  saveUsers(username);
+  showMessage(`Bilance lietotājam ${username} atjaunota uz ${newBalance} JG$`,'success');
+  updateAdminPanel();
+  updateLeaderboard();
+  if (currentUser === username) updateBalanceDisplay();
+}
+
+window.addMoneyToUser = function(username, amount){
+  if (!users[currentUser] || !users[currentUser].isAdmin) return;
+  users[username].balance += amount;
+  saveUsers(username);
+  showMessage(`Lietotājam ${username} pievienoti ${amount} JG$`,'success');
+  updateAdminPanel();
+  updateLeaderboard();
+  if (currentUser === username) updateBalanceDisplay();
+}
+
+window.deleteUser = function(username){
+  if (!users[currentUser] || !users[currentUser].isAdmin) return;
+  if (username === 'Dominiks'){ showMessage('Nevar dzēst admina kontu!','error'); return; }
+  if (confirm(`Vai tiešām vēlies dzēst lietotāju ${username}?`)){
+    delete users[username];
+    markUserDeleted(username);
+    if (currentUser === username) logout();
+    showMessage(`Lietotājs ${username} dzēsts!`,'info');
+    updateAdminPanel();
+    updateLeaderboard();
+  }
+}
+
+/* ================================================================
+   LEADERBOARD
+   ================================================================ */
+function updateLeaderboard(){
+  const sorted = Object.entries(users).sort((a,b)=>b[1].balance-a[1].balance).slice(0,10);
+  const tbody = document.getElementById('leaderboardBody');
+  tbody.innerHTML = '';
+  const medals = ['🥇','🥈','🥉'];
+  sorted.forEach(([username, data], i)=>{
+    const row = tbody.insertRow();
+    const rawBalance = (data.debt && data.debt > 0) ? 0 : data.balance;
+    row.innerHTML = `
+      <td>${i<3 ? `<span class="rank-medal">${medals[i]}</span>` : (i+1)+'.'}</td>
+      <td>${username} ${username==='Dominiks'?'🛡️':''}</td>
+      <td>${moneyText(rawBalance)}</td>`;
+  });
+}
+
+init();
+</script>
+</body>
+</html>
