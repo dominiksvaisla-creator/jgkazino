@@ -60,6 +60,22 @@ body{
   .mesh span{animation:none;}
 }
 
+/* ---------- admin abuse mode ---------- */
+body.admin-abuse-mode{background:#020d05;transition:background .8s var(--ease);}
+body.admin-abuse-mode .mesh span:nth-child(1){background:#0b5c25;}
+body.admin-abuse-mode .mesh span:nth-child(2){background:#0f8a34;}
+body.admin-abuse-mode .mesh span:nth-child(3){background:#12b34a;}
+body.admin-abuse-mode .glass{border-color:rgba(50,215,75,.35);}
+.admin-abuse-btn{
+  background:linear-gradient(135deg,#63e37d,var(--green) 55%,#146024);color:#03210a;
+  box-shadow:0 8px 20px -8px rgba(50,215,75,.55);
+}
+.admin-abuse-btn.active{
+  background:linear-gradient(135deg,#ff8a80,var(--red) 55%,#7a0f0a);color:#fff;
+  animation:abuseButtonPulse 1.2s ease-in-out infinite;
+}
+@keyframes abuseButtonPulse{0%,100%{box-shadow:0 8px 20px -8px rgba(255,69,58,.55);}50%{box-shadow:0 0 0 6px rgba(255,69,58,.35);}}
+
 .falling-gailis{
   position:fixed;pointer-events:none;z-index:1;user-select:none;
   animation-name:fall;animation-timing-function:cubic-bezier(.45,0,.55,1);animation-iteration-count:1;
@@ -518,9 +534,9 @@ footer{text-align:center;margin-top:26px;color:var(--text-3);font-size:.82em;}
         </div>
         <div class="bet-control">
           <span class="bet-label">Likme</span>
-          <button class="bet-adj" id="betAmountMinus" onclick="adjustBet('betAmount',-10,10,200)">−</button>
+          <button class="bet-adj" id="betAmountMinus" onclick="adjustBet('betAmount',-10,10,Infinity)">−</button>
           <span class="bet-amount" id="betAmount">10</span>
-          <button class="bet-adj" id="betAmountPlus" onclick="adjustBet('betAmount',10,10,200)">+</button>
+          <button class="bet-adj" id="betAmountPlus" onclick="adjustBet('betAmount',10,10,Infinity)">+</button>
         </div>
         <button class="btn btn-block" id="spinButton" onclick="spin()">GRIEZ!</button>
         <div class="paytable">🐓🐓🐓 2× &nbsp;·&nbsp; 🥚🥚🥚 5× &nbsp;·&nbsp; 👑👑👑 10× &nbsp;·&nbsp; ⭐⭐⭐ 20× &nbsp;·&nbsp; jebkuri 2 vienādi = 2×</div>
@@ -547,9 +563,9 @@ footer{text-align:center;margin-top:26px;color:var(--text-3);font-size:.82em;}
       </div>
       <div class="bet-control">
         <span class="bet-label">Ante</span>
-        <button class="bet-adj" id="pokerBetMinus" onclick="adjustBet('pokerBet',-10,10,200)">−</button>
+        <button class="bet-adj" id="pokerBetMinus" onclick="adjustBet('pokerBet',-10,10,Infinity)">−</button>
         <span class="bet-amount" id="pokerBet">10</span>
-        <button class="bet-adj" id="pokerBetPlus" onclick="adjustBet('pokerBet',10,10,200)">+</button>
+        <button class="bet-adj" id="pokerBetPlus" onclick="adjustBet('pokerBet',10,10,Infinity)">+</button>
       </div>
       <div class="action-row">
         <button class="btn btn-danger" id="pokerFoldBtn" onclick="pokerAction('fold')">Padoties</button>
@@ -572,9 +588,9 @@ footer{text-align:center;margin-top:26px;color:var(--text-3);font-size:.82em;}
       <div class="status-line" id="rouletteStatus">Izvēlies likmi un griez ruleti</div>
       <div class="bet-control">
         <span class="bet-label">Likme</span>
-        <button class="bet-adj" id="rouletteBetMinus" onclick="adjustBet('rouletteBet',-10,10,200)">−</button>
+        <button class="bet-adj" id="rouletteBetMinus" onclick="adjustBet('rouletteBet',-10,10,Infinity)">−</button>
         <span class="bet-amount" id="rouletteBet">10</span>
-        <button class="bet-adj" id="rouletteBetPlus" onclick="adjustBet('rouletteBet',10,10,200)">+</button>
+        <button class="bet-adj" id="rouletteBetPlus" onclick="adjustBet('rouletteBet',10,10,Infinity)">+</button>
       </div>
       <div class="betting-grid" id="rouletteBettingGrid">
         <div class="bet-cell" data-bet="red" onclick="placeRouletteBet('red')">🔴 Sarkanā</div>
@@ -607,9 +623,9 @@ footer{text-align:center;margin-top:26px;color:var(--text-3);font-size:.82em;}
       </div>
       <div class="bet-control">
         <span class="bet-label">Likme</span>
-        <button class="bet-adj" id="blackjackBetMinus" onclick="adjustBet('blackjackBet',-10,10,200)">−</button>
+        <button class="bet-adj" id="blackjackBetMinus" onclick="adjustBet('blackjackBet',-10,10,Infinity)">−</button>
         <span class="bet-amount" id="blackjackBet">10</span>
-        <button class="bet-adj" id="blackjackBetPlus" onclick="adjustBet('blackjackBet',10,10,200)">+</button>
+        <button class="bet-adj" id="blackjackBetPlus" onclick="adjustBet('blackjackBet',10,10,Infinity)">+</button>
       </div>
       <div class="action-row">
         <button class="btn" id="bjHitBtn" onclick="blackjackAction('hit')">Ņemt kārti</button>
@@ -627,6 +643,10 @@ footer{text-align:center;margin-top:26px;color:var(--text-3);font-size:.82em;}
       <div class="stat-card"><h3>Kopējie lietotāji</h3><div class="stat-value" id="totalUsers">0</div></div>
       <div class="stat-card"><h3>Kopējā bilance</h3><div class="stat-value" id="totalBalance">0</div></div>
       <div class="stat-card"><h3>Bagātākais spēlētājs</h3><div class="stat-value" id="richestPlayer">–</div></div>
+    </div>
+    <div style="text-align:center;margin-bottom:20px;">
+      <button class="btn admin-abuse-btn" id="adminAbuseBtn" onclick="toggleAdminAbuse()">🐔💥 Ieslēgt Admin Abuse</button>
+      <div style="color:var(--text-2);font-size:.78em;margin-top:8px;">Dubulto naudas laimestus, palielina veiksmi slotos/ruletē, un maina fonu visiem spēlētājiem</div>
     </div>
     <div class="user-management">
       <h3 style="color:var(--gold);font-size:.95em;margin-bottom:10px;">Spēlētāju pārvaldība</h3>
@@ -671,6 +691,35 @@ function createFallingGailis(){
 }
 setInterval(createFallingGailis, 900);
 for(let i=0;i<4;i++) setTimeout(createFallingGailis, i*300);
+
+/* ================= admin abuse: money rain ================= */
+const MONEY_EMOJI = ['💰','💵','🤑','💸'];
+function createFallingMoney(){
+  const g = document.createElement('div');
+  g.className = 'falling-gailis';
+  g.textContent = MONEY_EMOJI[Math.floor(Math.random()*MONEY_EMOJI.length)];
+  const size = Math.random()*24+18;
+  const dur = Math.random()*6+5;
+  const op = (Math.random()*.3+.25).toFixed(2);
+  g.style.left = Math.random()*100+'%';
+  g.style.fontSize = size+'px';
+  g.style.filter = `blur(${(1-size/42)*1.4}px)`;
+  g.style.setProperty('--sway',(Math.random()*60-30)+'px');
+  g.style.setProperty('--op',op);
+  g.style.animationDuration = dur+'s';
+  document.body.appendChild(g);
+  setTimeout(()=>g.remove(), dur*1000+200);
+}
+let moneyRainInterval = null;
+function startMoneyRain(){
+  if (moneyRainInterval) return;
+  moneyRainInterval = setInterval(createFallingMoney, 260);
+  for(let i=0;i<8;i++) setTimeout(createFallingMoney, i*90);
+}
+function stopMoneyRain(){
+  clearInterval(moneyRainInterval);
+  moneyRainInterval = null;
+}
 
 function burstConfetti(x,y){
   const n = 14;
@@ -743,41 +792,84 @@ const JSONBIN_URL = `https://api.jsonbin.io/v3/b/${JSONBIN_CONFIG.binId}`;
 let users = JSON.parse(localStorage.getItem('gailisUsers')) || {};
 let currentUser = null;
 let spinning = false;
+let adminAbuseActive = JSON.parse(localStorage.getItem('gailisAdminAbuse')) || false;
 
-// local cache always updated immediately; remote push happens in the background
-// so gameplay never has to wait on the network.
-function saveUsers(){
+// Instead of ever pushing our whole local snapshot (which can be stale and
+// clobber other players' concurrent changes — this was wiping/swapping
+// balances), we only track WHICH user records we personally touched, then
+// merge just those onto the freshest server copy before writing back.
+let dirtyUsernames = new Set();
+let deletedUsernames = new Set();
+
+// local cache always updated immediately; remote sync happens in the background
+// so gameplay never has to wait on the network. username defaults to whoever
+// is currently logged in, since that covers the vast majority of call sites.
+function saveUsers(username){
+  const target = username || currentUser;
+  if (target) dirtyUsernames.add(target);
   localStorage.setItem('gailisUsers', JSON.stringify(users));
-  pushRemoteUsers();
+  pushRemoteState();
 }
 
-async function fetchRemoteUsers(){
+function markUserDeleted(username){
+  deletedUsernames.add(username);
+  dirtyUsernames.delete(username);
+  localStorage.setItem('gailisUsers', JSON.stringify(users));
+  pushRemoteState();
+}
+
+async function fetchRemoteState(){
   try{
     const res = await fetch(JSONBIN_URL + '/latest', {
       headers: { 'X-Master-Key': JSONBIN_CONFIG.apiKey }
     });
     if (!res.ok) throw new Error('HTTP ' + res.status);
     const data = await res.json();
-    return (data.record && typeof data.record === 'object' && data.record.users) ? data.record.users : {};
+    const record = (data.record && typeof data.record === 'object') ? data.record : {};
+    return { users: record.users || {}, adminAbuse: !!record.adminAbuse };
   } catch(err){
     console.error('JSONBin fetch error:', err);
     return null; // signals failure so callers can fall back to the local cache
   }
 }
 
-async function pushRemoteUsers(){
+// fetch-merge-write: always start from the freshest server state, then only
+// overlay the specific accounts *we* changed since our last successful sync.
+// This is what stops one stale browser tab from overwriting everyone else.
+async function pushRemoteState(){
+  const pendingDirty = new Set(dirtyUsernames);
+  const pendingDeleted = new Set(deletedUsernames);
   try{
+    const remote = await fetchRemoteState();
+    const mergedUsers = remote ? { ...remote.users } : { ...users };
+    pendingDirty.forEach(u => { if (users[u]) mergedUsers[u] = users[u]; });
+    pendingDeleted.forEach(u => { delete mergedUsers[u]; });
+
+    users = mergedUsers;
+    localStorage.setItem('gailisUsers', JSON.stringify(users));
+
     const res = await fetch(JSONBIN_URL, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
         'X-Master-Key': JSONBIN_CONFIG.apiKey
       },
-      body: JSON.stringify({ users })
+      body: JSON.stringify({ users, adminAbuse: adminAbuseActive })
     });
     if (!res.ok) throw new Error('HTTP ' + res.status);
+
+    pendingDirty.forEach(u => dirtyUsernames.delete(u));
+    pendingDeleted.forEach(u => deletedUsernames.delete(u));
+
+    updateLeaderboard();
+    if (currentUser && users[currentUser] && document.getElementById('userInfo').style.display !== 'none'){
+      updateBalanceDisplay();
+      updateDebtDisplays();
+      if (users[currentUser].isAdmin) updateAdminPanel();
+    }
   } catch(err){
     console.error('JSONBin push error:', err);
+    // leave dirtyUsernames/deletedUsernames intact so the next push retries them
   }
 }
 
@@ -790,18 +882,45 @@ function ensureAdminAccount(){
     if (!users['Dominiks'].isAdmin){ users['Dominiks'].isAdmin = true; changed = true; }
     if (users['Dominiks'].password !== 'dodo1014'){ users['Dominiks'].password = 'dodo1014'; changed = true; }
   }
+  if (changed) dirtyUsernames.add('Dominiks');
   return changed;
 }
 
+function applyAdminAbuseVisuals(active){
+  document.body.classList.toggle('admin-abuse-mode', active);
+  if (active) startMoneyRain(); else stopMoneyRain();
+  const btn = document.getElementById('adminAbuseBtn');
+  if (btn){
+    btn.classList.toggle('active', active);
+    btn.textContent = active ? '🐔💥 Izslēgt Admin Abuse' : '🐔💥 Ieslēgt Admin Abuse';
+  }
+}
+
 async function syncFromRemote(showToast){
-  const remote = await fetchRemoteUsers();
+  const remote = await fetchRemoteState();
   if (remote === null){
     if (showToast) showMessage('Neizdevās savienoties ar serveri — rāda vietējos datus.', 'error');
     return;
   }
-  users = remote;
+  // don't let this read-only poll clobber changes we haven't pushed yet
+  const newUsers = remote.users;
+  dirtyUsernames.forEach(u => { if (users[u]) newUsers[u] = users[u]; });
+  deletedUsernames.forEach(u => { delete newUsers[u]; });
+  users = newUsers;
   localStorage.setItem('gailisUsers', JSON.stringify(users));
-  if (ensureAdminAccount()) pushRemoteUsers();
+
+  const abuseChanged = remote.adminAbuse !== adminAbuseActive;
+  adminAbuseActive = remote.adminAbuse;
+  localStorage.setItem('gailisAdminAbuse', JSON.stringify(adminAbuseActive));
+  applyAdminAbuseVisuals(adminAbuseActive);
+  if (abuseChanged){
+    showMessage(
+      adminAbuseActive ? '🐔💥 ADMIN ABUSE IR SĀKUSIES! Veiksme un naudas laimesti dubultojas!' : 'Admin abuse ir beidzies. Viss atpakaļ normā.',
+      adminAbuseActive ? 'error' : 'info'
+    );
+  }
+
+  if (ensureAdminAccount()) pushRemoteState();
 
   updateLeaderboard();
   if (currentUser && users[currentUser] && document.getElementById('userInfo').style.display !== 'none'){
@@ -812,13 +931,29 @@ async function syncFromRemote(showToast){
   if (showToast) showMessage('Dati atjaunoti no servera! 🔄', 'success');
 }
 
+window.toggleAdminAbuse = function(){
+  if (!currentUser || !users[currentUser] || !users[currentUser].isAdmin) return;
+  adminAbuseActive = !adminAbuseActive;
+  localStorage.setItem('gailisAdminAbuse', JSON.stringify(adminAbuseActive));
+  applyAdminAbuseVisuals(adminAbuseActive);
+  showMessage(
+    adminAbuseActive ? '🐔💥 Tu ieslēdzi Admin Abuse visiem!' : 'Tu izslēdzi Admin Abuse.',
+    adminAbuseActive ? 'error' : 'info'
+  );
+  pushRemoteState();
+}
+
 function init(){
   ensureAdminAccount();
-  saveUsers();
+  applyAdminAbuseVisuals(adminAbuseActive);
+  if (dirtyUsernames.size) pushRemoteState();
   updateLeaderboard();
   positionSegPill(document.getElementById('authSeg'), document.getElementById('authPill'), document.querySelector('#authSeg button.active'));
   checkSavedSession();
   syncFromRemote(false);
+  // light background poll so admin abuse + leaderboard changes reach everyone,
+  // not just people who happen to click something
+  setInterval(()=>syncFromRemote(false), 25000);
   window.addEventListener('resize', ()=>{
     const activeGameBtn = document.querySelector('.game-btn.active');
     if (activeGameBtn) positionSegPill(document.getElementById('gameMenu'), document.getElementById('gamePill'), activeGameBtn);
@@ -864,7 +999,7 @@ window.register = function(){
   if (users[username]){ showMessage('Šāds lietotājs jau eksistē!','error'); return; }
 
   users[username] = { password, balance:100, registered:new Date().toISOString(), isAdmin:false };
-  saveUsers();
+  saveUsers(username);
   updateLeaderboard();
   showMessage('Reģistrācija veiksmīga! Vari ienākt!','success');
   switchAuthTab('login');
@@ -949,9 +1084,14 @@ window.switchGame = function(game, btnEl){
   document.querySelectorAll('.game-content').forEach(c=>c.classList.remove('showing'));
   document.getElementById(game+'Game').classList.add('showing');
 
-  if (game === 'poker') startPokerGame();
-  else if (game === 'roulette') initRoulette();
-  else if (game === 'blackjack') startBlackjack();
+  if (game === 'poker'){
+    if (poker.over || !poker.playerCards.length) startPokerGame();
+    else { updatePokerDisplay(); updatePokerControls(); }
+  } else if (game === 'roulette') initRoulette();
+  else if (game === 'blackjack'){
+    if (blackjackGameOver || !playerBlackjackCards.length) startBlackjack();
+    else { updateBlackjackDisplay(); updateBlackjackControls(); }
+  }
 }
 
 /* ================= shared bet adjuster ================= */
@@ -1096,22 +1236,34 @@ window.spin = async function(){
 
   SLOT_REEL_IDS.forEach(id => document.getElementById(id).classList.add('spinning'));
 
+  // decide the outcome for each reel upfront so admin-abuse luck can bias it
+  const finals = [
+    SLOT_SYMBOLS[Math.floor(Math.random()*SLOT_SYMBOLS.length)],
+    SLOT_SYMBOLS[Math.floor(Math.random()*SLOT_SYMBOLS.length)],
+    SLOT_SYMBOLS[Math.floor(Math.random()*SLOT_SYMBOLS.length)]
+  ];
+  if (adminAbuseActive){
+    if (Math.random() < 0.35){
+      finals[1] = finals[0]; finals[2] = finals[0]; // force jackpot
+    } else if (Math.random() < 0.85){
+      finals[1] = finals[0]; // force at least a pair
+    }
+  }
+
   // reveal each reel in turn, same pacing as the classic version
   for (let i=0;i<SLOT_REEL_IDS.length;i++){
     await new Promise(resolve => setTimeout(resolve, 500));
-    const randomSymbol = SLOT_SYMBOLS[Math.floor(Math.random()*SLOT_SYMBOLS.length)];
     const el = document.getElementById(SLOT_REEL_IDS[i]);
-    el.textContent = randomSymbol;
+    el.textContent = finals[i];
     el.classList.remove('spinning');
   }
 
-  const r1 = document.getElementById('reel1').textContent;
-  const r2 = document.getElementById('reel2').textContent;
-  const r3 = document.getElementById('reel3').textContent;
+  const r1 = finals[0], r2 = finals[1], r3 = finals[2];
 
   let winAmount = 0;
   if (r1 === r2 && r2 === r3){
     winAmount = bet * SLOT_MULTIPLIER[r1];
+    if (adminAbuseActive) winAmount *= 2;
     showMessage(`LIELAIS LAIMESTS! Tu vinnēji ${winAmount} JG dolārus! 🎉`, 'success');
     const rect = document.getElementById('slotMachine').getBoundingClientRect();
     burstConfetti(rect.left+rect.width/2, rect.top+rect.height/2);
@@ -1119,6 +1271,7 @@ window.spin = async function(){
     sm.classList.remove('win-glow'); void sm.offsetHeight; sm.classList.add('win-glow');
   } else if (r1 === r2 || r2 === r3 || r1 === r3){
     winAmount = bet * 2;
+    if (adminAbuseActive) winAmount *= 2;
     showMessage(`Mazais laimests! Tu vinnēji ${winAmount} JG dolārus! 🐓`, 'success');
   } else {
     showMessage('Šoreiz nepaveicās! Mēģini vēlreiz!', 'error');
@@ -1205,16 +1358,29 @@ function handName(score){ return HAND_NAMES[score[0]]; }
 let poker = { deck:[], playerCards:[], npcCards:[], community:[], street:'preflop', pot:0, over:false };
 
 window.startPokerGame = function(){
+  if (!currentUser) return;
+  const ante = parseInt(document.getElementById('pokerBet').textContent);
+  if (users[currentUser].balance < ante){ showMessage('Nepietiek naudas, lai sāktu spēli!','error'); return; }
+
+  // ante is charged the moment the hand starts, so you can't dodge a bad
+  // deal for free by just mashing "Jauna spēle" before ever acting
+  const prevBalance = users[currentUser].balance;
+  users[currentUser].balance -= ante;
+  updateBalanceDisplay(prevBalance);
+
   poker.deck = createDeck();
   poker.playerCards = [poker.deck.pop(), poker.deck.pop()];
   poker.npcCards = [poker.deck.pop(), poker.deck.pop()];
   poker.community = [];
   poker.street = 'preflop';
-  poker.pot = 0;
+  poker.pot = ante;
   poker.over = false;
   updatePokerDisplay();
   updatePokerControls();
-  lockBet('pokerBet', false);
+
+  saveUsers();
+  updateLeaderboard();
+  if (users[currentUser].isAdmin) updateAdminPanel();
 }
 
 const STREET_LABEL = {preflop:'Pirmsflopa', flop:'Flops', turn:'Terns', river:'Riverа', showdown:'Atklāšana'};
@@ -1272,7 +1438,9 @@ window.pokerAction = function(action){
     const raiseCost = ante * 2;
     if (users[currentUser].balance < raiseCost){ showMessage('Nepietiek naudas paaugstināšanai!','error'); return; }
     const npcStrength = estimateNpcStrength();
-    const npcFolds = npcStrength < 0.35 && Math.random() < 0.45;
+    const npcFolds = adminAbuseActive
+      ? Math.random() < 0.65
+      : (npcStrength < 0.35 && Math.random() < 0.45);
 
     const prevBalance = users[currentUser].balance;
     users[currentUser].balance -= raiseCost;
@@ -1281,10 +1449,12 @@ window.pokerAction = function(action){
 
     if (npcFolds){
       poker.over = true;
+      let winAmount = poker.pot;
+      if (adminAbuseActive) winAmount *= 2;
       const before = users[currentUser].balance;
-      users[currentUser].balance += poker.pot;
+      users[currentUser].balance += winAmount;
       updateBalanceDisplay(before);
-      showMessage(`NPC padevās! Tu laimēji ${poker.pot} JG$! 🎉`, 'success');
+      showMessage(`NPC padevās! Tu laimēji ${winAmount} JG$! 🎉`, 'success');
       updatePokerDisplay();
       updatePokerControls();
       finishPokerRound();
@@ -1319,11 +1489,13 @@ function doPokerShowdown(){
   poker.over = true;
   const playerBest = bestHandFrom([...poker.playerCards, ...poker.community]);
   const npcBest = bestHandFrom([...poker.npcCards, ...poker.community]);
-  const cmp = compareScores(playerBest.score, npcBest.score);
+  let cmp = compareScores(playerBest.score, npcBest.score);
+  if (adminAbuseActive && cmp < 0 && Math.random() < 0.3) cmp = 0; // a little admin-abuse mercy
   const prevBalance = users[currentUser].balance;
 
   if (cmp > 0){
-    const winAmount = poker.pot * 2;
+    let winAmount = poker.pot * 2;
+    if (adminAbuseActive) winAmount *= 2;
     users[currentUser].balance += winAmount;
     showMessage(`Tu uzvarēji ar "${handName(playerBest.score)}"! Laimests: ${winAmount} JG$! 🎉`, 'success');
     const rect = document.getElementById('pokerGame').getBoundingClientRect();
@@ -1394,6 +1566,18 @@ window.placeRouletteBet = function(betType){
   showMessage(`Likme uz "${betType}" izvēlēta!`, 'info');
 }
 
+const ROULETTE_BET_POOLS = {
+  red: ()=>[...ROULETTE_REDS],
+  black: ()=>Array.from({length:36},(_,i)=>i+1).filter(n=>!ROULETTE_REDS.has(n)),
+  even: ()=>Array.from({length:18},(_,i)=>(i+1)*2),
+  odd: ()=>Array.from({length:18},(_,i)=>i*2+1),
+  '1-12': ()=>Array.from({length:12},(_,i)=>i+1),
+  '13-24': ()=>Array.from({length:12},(_,i)=>i+13),
+  '25-36': ()=>Array.from({length:12},(_,i)=>i+25),
+  '1-18': ()=>Array.from({length:18},(_,i)=>i+1),
+  '19-36': ()=>Array.from({length:18},(_,i)=>i+19)
+};
+
 window.spinRoulette = function(){
   if (rouletteSpinning || !currentUser) return;
   if (!currentRouletteBet){ showMessage('Vispirms izvēlies likmi!','error'); return; }
@@ -1410,7 +1594,11 @@ window.spinRoulette = function(){
   document.getElementById('rouletteSpinBtn').disabled = true;
   document.getElementById('rouletteStatus').textContent = 'Rite…';
 
-  const result = Math.floor(Math.random()*37);
+  let result = Math.floor(Math.random()*37);
+  if (adminAbuseActive && ROULETTE_BET_POOLS[currentRouletteBet] && Math.random() < 0.6){
+    const pool = ROULETTE_BET_POOLS[currentRouletteBet]();
+    result = pool[Math.floor(Math.random()*pool.length)];
+  }
   const idx = ROULETTE_ORDER.indexOf(result);
   const segAngle = 360/ROULETTE_ORDER.length;
   const segCenter = idx*segAngle + segAngle/2;
@@ -1440,7 +1628,8 @@ window.spinRoulette = function(){
 
     const before = users[currentUser].balance;
     if (won){
-      const winAmount = bet*multiplier;
+      let winAmount = bet*multiplier;
+      if (adminAbuseActive) winAmount *= 2;
       users[currentUser].balance += winAmount;
       showMessage(`Uzvara! Izkrita ${result} (${resultColor})! Laimests: ${winAmount} JG$! 🎉`, 'success');
       const rect = document.getElementById('rouletteGame').getBoundingClientRect();
@@ -1486,13 +1675,26 @@ function calculateHandValue(cards){
 }
 
 window.startBlackjack = function(){
+  if (!currentUser) return;
+  const bet = parseInt(document.getElementById('blackjackBet').textContent);
+  if (users[currentUser].balance < bet){ showMessage('Nepietiek naudas, lai sāktu spēli!','error'); return; }
+
+  // bet is charged the moment the hand starts, so "Jauna spēle" can't be used
+  // to dodge a losing hand for free
+  const prevBalance = users[currentUser].balance;
+  users[currentUser].balance -= bet;
+  updateBalanceDisplay(prevBalance);
+
   blackjackDeck = createDeck();
   playerBlackjackCards = [blackjackDeck.pop(), blackjackDeck.pop()];
   dealerBlackjackCards = [blackjackDeck.pop(), blackjackDeck.pop()];
   blackjackGameOver = false;
   updateBlackjackDisplay();
   updateBlackjackControls();
-  lockBet('blackjackBet', true);
+
+  saveUsers();
+  updateLeaderboard();
+  if (users[currentUser].isAdmin) updateAdminPanel();
 }
 
 function updateBlackjackDisplay(){
@@ -1520,23 +1722,29 @@ window.blackjackAction = function(action){
   const bet = parseInt(document.getElementById('blackjackBet').textContent);
   const prevBalance = users[currentUser].balance;
 
+  // bet was already collected when the hand started — from here on we only
+  // ever ADD payouts, never subtract the same stake twice
   if (action === 'hit'){
     playerBlackjackCards.push(blackjackDeck.pop());
     const playerValue = calculateHandValue(playerBlackjackCards);
     if (playerValue > 21){
       showMessage('Pārsniegts 21! Tu zaudēji!','error');
-      users[currentUser].balance -= bet;
       blackjackGameOver = true;
     }
     updateBlackjackDisplay();
   } else if (action === 'stand'){
     while (calculateHandValue(dealerBlackjackCards) < 17) dealerBlackjackCards.push(blackjackDeck.pop());
     const playerValue = calculateHandValue(playerBlackjackCards);
-    const dealerValue = calculateHandValue(dealerBlackjackCards);
+    let dealerValue = calculateHandValue(dealerBlackjackCards);
+    if (adminAbuseActive && dealerValue <= 21 && dealerValue >= playerValue){
+      dealerBlackjackCards.push(blackjackDeck.pop());
+      dealerValue = calculateHandValue(dealerBlackjackCards);
+    }
     blackjackGameOver = true;
 
     if (dealerValue > 21 || playerValue > dealerValue){
-      const winAmount = bet*2;
+      let winAmount = bet*2;
+      if (adminAbuseActive) winAmount *= 2;
       users[currentUser].balance += winAmount;
       showMessage(`Tu uzvarēji! Laimests: ${winAmount} JG$! 🎉`,'success');
       const rect = document.getElementById('blackjackGame').getBoundingClientRect();
@@ -1545,32 +1753,35 @@ window.blackjackAction = function(action){
       users[currentUser].balance += bet;
       showMessage('Neizšķirts! Nauda atgriezta!','info');
     } else {
-      users[currentUser].balance -= bet;
       showMessage('Dīleris uzvar!','error');
     }
     updateBlackjackDisplay();
   } else if (action === 'double'){
     if (playerBlackjackCards.length === 2){
-      if (users[currentUser].balance < bet*2){ showMessage('Nepietiek naudas dubultošanai!','error'); return; }
+      if (users[currentUser].balance < bet){ showMessage('Nepietiek naudas dubultošanai!','error'); return; }
+      users[currentUser].balance -= bet;
       playerBlackjackCards.push(blackjackDeck.pop());
       const playerValue = calculateHandValue(playerBlackjackCards);
 
       if (playerValue > 21){
         showMessage('Pārsniegts 21! Tu zaudēji!','error');
-        users[currentUser].balance -= bet*2;
       } else {
         while (calculateHandValue(dealerBlackjackCards) < 17) dealerBlackjackCards.push(blackjackDeck.pop());
-        const dealerValue = calculateHandValue(dealerBlackjackCards);
+        let dealerValue = calculateHandValue(dealerBlackjackCards);
+        if (adminAbuseActive && dealerValue <= 21 && dealerValue >= playerValue){
+          dealerBlackjackCards.push(blackjackDeck.pop());
+          dealerValue = calculateHandValue(dealerBlackjackCards);
+        }
 
         if (dealerValue > 21 || playerValue > dealerValue){
-          const winAmount = bet*4;
+          let winAmount = bet*4;
+          if (adminAbuseActive) winAmount *= 2;
           users[currentUser].balance += winAmount;
           showMessage(`Tu uzvarēji! Laimests: ${winAmount} JG$! 🎉`,'success');
         } else if (playerValue === dealerValue){
           users[currentUser].balance += bet*2;
           showMessage('Neizšķirts! Nauda atgriezta!','info');
         } else {
-          users[currentUser].balance -= bet*2;
           showMessage('Dīleris uzvar!','error');
         }
       }
@@ -1622,7 +1833,7 @@ window.updateUserBalance = function(username){
   const newBalance = parseInt(document.getElementById(`balance-${username}`).value);
   if (isNaN(newBalance) || newBalance < 0){ showMessage('Nederīga summa!','error'); return; }
   users[username].balance = newBalance;
-  saveUsers();
+  saveUsers(username);
   showMessage(`Bilance lietotājam ${username} atjaunota uz ${newBalance} JG$`,'success');
   updateAdminPanel();
   updateLeaderboard();
@@ -1632,7 +1843,7 @@ window.updateUserBalance = function(username){
 window.addMoneyToUser = function(username, amount){
   if (!users[currentUser] || !users[currentUser].isAdmin) return;
   users[username].balance += amount;
-  saveUsers();
+  saveUsers(username);
   showMessage(`Lietotājam ${username} pievienoti ${amount} JG$`,'success');
   updateAdminPanel();
   updateLeaderboard();
@@ -1644,7 +1855,7 @@ window.deleteUser = function(username){
   if (username === 'Dominiks'){ showMessage('Nevar dzēst admina kontu!','error'); return; }
   if (confirm(`Vai tiešām vēlies dzēst lietotāju ${username}?`)){
     delete users[username];
-    saveUsers();
+    markUserDeleted(username);
     if (currentUser === username) logout();
     showMessage(`Lietotājs ${username} dzēsts!`,'info');
     updateAdminPanel();
