@@ -276,9 +276,16 @@ h1{
 .bet-adj:active{transform:scale(.88);background:var(--glass-fill-press);}
 .bet-adj:disabled{opacity:.3;cursor:not-allowed;}
 .bet-amount{
-  min-width:88px;text-align:center;font-size:1.3em;font-weight:800;color:var(--gold);
-  font-variant-numeric:tabular-nums;
+  min-width:88px;max-width:150px;text-align:center;font-size:1.3em;font-weight:800;color:var(--gold);
+  font-variant-numeric:tabular-nums;background:transparent;border:none;border-bottom:2px solid transparent;
+  font-family:inherit;padding:2px 4px;transition:border-color .2s var(--ease);
+  -moz-appearance:textfield;
 }
+.bet-amount::-webkit-outer-spin-button,.bet-amount::-webkit-inner-spin-button{
+  -webkit-appearance:none;margin:0;
+}
+.bet-amount:focus{outline:none;border-bottom-color:var(--gold-dim);}
+.bet-amount:disabled{opacity:.5;cursor:not-allowed;}
 .bet-label{color:var(--text-2);font-size:.85em;font-weight:600;margin-right:2px;}
 
 /* ---------- slots ---------- */
@@ -500,7 +507,7 @@ footer{text-align:center;margin-top:26px;color:var(--text-3);font-size:.82em;}
     <div class="bet-control">
       <span class="bet-label">Aizņemamā summa</span>
       <button class="bet-adj" id="loanAmountMinus" onclick="adjustLoanAmount(-50)">−</button>
-      <span class="bet-amount" id="loanAmount">100</span>
+      <input type="number" class="bet-amount" id="loanAmount" value="100" min="50" max="2000" step="50" onchange="clampBetInput(this,50,2000)">
       <button class="bet-adj" id="loanAmountPlus" onclick="adjustLoanAmount(50)">+</button>
     </div>
     <div class="loan-preview">Tu saņemsi <b id="loanGetAmount">100</b> JG$ uzreiz, bet parādā būs <b id="loanOweAmount">200</b> JG$</div>
@@ -535,11 +542,11 @@ footer{text-align:center;margin-top:26px;color:var(--text-3);font-size:.82em;}
         <div class="bet-control">
           <span class="bet-label">Likme</span>
           <button class="bet-adj" id="betAmountMinus" onclick="adjustBet('betAmount',-10,10,Infinity)">−</button>
-          <span class="bet-amount" id="betAmount">10</span>
+          <input type="number" class="bet-amount" id="betAmount" value="10" min="10" step="10" onchange="clampBetInput(this,10)">
           <button class="bet-adj" id="betAmountPlus" onclick="adjustBet('betAmount',10,10,Infinity)">+</button>
         </div>
         <button class="btn btn-block" id="spinButton" onclick="spin()">GRIEZ!</button>
-        <div class="paytable">🐓🐓🐓 2× &nbsp;·&nbsp; 🥚🥚🥚 5× &nbsp;·&nbsp; 👑👑👑 10× &nbsp;·&nbsp; ⭐⭐⭐ 20× &nbsp;·&nbsp; jebkuri 2 vienādi = 2×</div>
+        <div class="paytable">🐓🐓🐓 2× &nbsp;·&nbsp; 🥚🥚🥚 5× &nbsp;·&nbsp; 👑👑👑 10× &nbsp;·&nbsp; ⭐⭐⭐ 20× &nbsp;·&nbsp; jebkuri 2 vienādi = 2× &nbsp;·&nbsp; ❌ jebkur = nekas nav vinnēts</div>
       </div>
     </div>
 
@@ -564,7 +571,7 @@ footer{text-align:center;margin-top:26px;color:var(--text-3);font-size:.82em;}
       <div class="bet-control">
         <span class="bet-label">Ante</span>
         <button class="bet-adj" id="pokerBetMinus" onclick="adjustBet('pokerBet',-10,10,Infinity)">−</button>
-        <span class="bet-amount" id="pokerBet">10</span>
+        <input type="number" class="bet-amount" id="pokerBet" value="10" min="10" step="10" onchange="clampBetInput(this,10)">
         <button class="bet-adj" id="pokerBetPlus" onclick="adjustBet('pokerBet',10,10,Infinity)">+</button>
       </div>
       <div class="action-row">
@@ -589,7 +596,7 @@ footer{text-align:center;margin-top:26px;color:var(--text-3);font-size:.82em;}
       <div class="bet-control">
         <span class="bet-label">Likme</span>
         <button class="bet-adj" id="rouletteBetMinus" onclick="adjustBet('rouletteBet',-10,10,Infinity)">−</button>
-        <span class="bet-amount" id="rouletteBet">10</span>
+        <input type="number" class="bet-amount" id="rouletteBet" value="10" min="10" step="10" onchange="clampBetInput(this,10)">
         <button class="bet-adj" id="rouletteBetPlus" onclick="adjustBet('rouletteBet',10,10,Infinity)">+</button>
       </div>
       <div class="betting-grid" id="rouletteBettingGrid">
@@ -624,7 +631,7 @@ footer{text-align:center;margin-top:26px;color:var(--text-3);font-size:.82em;}
       <div class="bet-control">
         <span class="bet-label">Likme</span>
         <button class="bet-adj" id="blackjackBetMinus" onclick="adjustBet('blackjackBet',-10,10,Infinity)">−</button>
-        <span class="bet-amount" id="blackjackBet">10</span>
+        <input type="number" class="bet-amount" id="blackjackBet" value="10" min="10" step="10" onchange="clampBetInput(this,10)">
         <button class="bet-adj" id="blackjackBetPlus" onclick="adjustBet('blackjackBet',10,10,Infinity)">+</button>
       </div>
       <div class="action-row">
@@ -742,7 +749,7 @@ function burstConfetti(x,y){
 }
 
 /* ================= number count-up ================= */
-const RICH_THRESHOLD = 1000000;
+const RICH_THRESHOLD = 10000000000;
 const RICH_TEXT = 'sasodīti bagāts 🤑';
 
 function moneyText(amount){
@@ -953,7 +960,7 @@ function init(){
   syncFromRemote(false);
   // light background poll so admin abuse + leaderboard changes reach everyone,
   // not just people who happen to click something
-  setInterval(()=>syncFromRemote(false), 25000);
+  setInterval(()=>syncFromRemote(false), 8000);
   window.addEventListener('resize', ()=>{
     const activeGameBtn = document.querySelector('.game-btn.active');
     if (activeGameBtn) positionSegPill(document.getElementById('gameMenu'), document.getElementById('gamePill'), activeGameBtn);
@@ -1084,26 +1091,29 @@ window.switchGame = function(game, btnEl){
   document.querySelectorAll('.game-content').forEach(c=>c.classList.remove('showing'));
   document.getElementById(game+'Game').classList.add('showing');
 
-  if (game === 'poker'){
-    if (poker.over || !poker.playerCards.length) startPokerGame();
-    else { updatePokerDisplay(); updatePokerControls(); }
-  } else if (game === 'roulette') initRoulette();
-  else if (game === 'blackjack'){
-    if (blackjackGameOver || !playerBlackjackCards.length) startBlackjack();
-    else { updateBlackjackDisplay(); updateBlackjackControls(); }
-  }
+  if (game === 'poker'){ updatePokerDisplay(); updatePokerControls(); }
+  else if (game === 'roulette') initRoulette();
+  else if (game === 'blackjack'){ updateBlackjackDisplay(); updateBlackjackControls(); }
 }
 
 /* ================= shared bet adjuster ================= */
 window.adjustBet = function(id, delta, min, max){
   const el = document.getElementById(id);
   if (el.dataset.locked === '1') return;
-  let val = parseInt(el.textContent) + delta;
+  let val = parseInt(el.value) + delta;
   val = Math.max(min, Math.min(max, val));
-  el.textContent = val;
+  el.value = val;
+}
+window.clampBetInput = function(el, min, max){
+  let val = parseInt(el.value);
+  if (isNaN(val)) val = min;
+  val = Math.max(min, max !== undefined ? Math.min(max, val) : val);
+  el.value = val;
+  if (el.id === 'loanAmount') updateLoanPreview();
 }
 function lockBet(id, locked){
   document.getElementById(id).dataset.locked = locked ? '1':'0';
+  document.getElementById(id).disabled = locked;
   document.getElementById(id+'Minus').disabled = locked;
   document.getElementById(id+'Plus').disabled = locked;
 }
@@ -1111,14 +1121,14 @@ function lockBet(id, locked){
 /* ================= loan bank ================= */
 window.adjustLoanAmount = function(delta){
   const el = document.getElementById('loanAmount');
-  let val = parseInt(el.textContent) + delta;
+  let val = parseInt(el.value) + delta;
   val = Math.max(50, Math.min(2000, val));
-  el.textContent = val;
+  el.value = val;
   updateLoanPreview();
 }
 
 function updateLoanPreview(){
-  const amt = parseInt(document.getElementById('loanAmount').textContent);
+  const amt = parseInt(document.getElementById('loanAmount').value);
   document.getElementById('loanGetAmount').textContent = amt;
   document.getElementById('loanOweAmount').textContent = amt*2;
 }
@@ -1151,7 +1161,7 @@ window.closeLoanPanel = function(){
 
 window.takeLoan = function(){
   if (!currentUser) return;
-  const amt = parseInt(document.getElementById('loanAmount').textContent);
+  const amt = parseInt(document.getElementById('loanAmount').value);
   if (!users[currentUser].debt) users[currentUser].debt = 0;
 
   const prevBalance = users[currentUser].balance;
@@ -1216,14 +1226,15 @@ function getCardHTML(card, hidden){
 /* ================================================================
    SLOTS
    ================================================================ */
-const SLOT_SYMBOLS = ['🐓','🥚','👑','⭐'];
+const SLOT_SYMBOLS = ['🐓','🥚','👑','⭐','❌'];
 const SLOT_MULTIPLIER = {'🐓':2,'🥚':5,'👑':10,'⭐':20};
+const SLOT_BUST_SYMBOL = '❌';
 const SLOT_REEL_IDS = ['reel1','reel2','reel3'];
 
 window.spin = async function(){
   if (spinning) return;
   if (!currentUser) return;
-  const bet = parseInt(document.getElementById('betAmount').textContent);
+  const bet = parseInt(document.getElementById('betAmount').value);
   if (users[currentUser].balance < bet){ showMessage('Nepietiek Jāņa Gaiļa dolāru!','error'); return; }
 
   const prevBalance = users[currentUser].balance;
@@ -1243,10 +1254,13 @@ window.spin = async function(){
     SLOT_SYMBOLS[Math.floor(Math.random()*SLOT_SYMBOLS.length)]
   ];
   if (adminAbuseActive){
+    const luckySymbols = SLOT_SYMBOLS.filter(s => s !== SLOT_BUST_SYMBOL);
     if (Math.random() < 0.35){
-      finals[1] = finals[0]; finals[2] = finals[0]; // force jackpot
+      const sym = luckySymbols[Math.floor(Math.random()*luckySymbols.length)];
+      finals[0] = sym; finals[1] = sym; finals[2] = sym; // force jackpot, never an X
     } else if (Math.random() < 0.85){
-      finals[1] = finals[0]; // force at least a pair
+      const sym = luckySymbols[Math.floor(Math.random()*luckySymbols.length)];
+      finals[0] = sym; finals[1] = sym; // force at least a pair, reel 3 stays a wildcard
     }
   }
 
@@ -1261,7 +1275,9 @@ window.spin = async function(){
   const r1 = finals[0], r2 = finals[1], r3 = finals[2];
 
   let winAmount = 0;
-  if (r1 === r2 && r2 === r3){
+  if (r1 === SLOT_BUST_SYMBOL || r2 === SLOT_BUST_SYMBOL || r3 === SLOT_BUST_SYMBOL){
+    showMessage('❌ Izkrita X! Šoreiz nekas nav vinnēts, lai kas arī cits sakristu!', 'error');
+  } else if (r1 === r2 && r2 === r3){
     winAmount = bet * SLOT_MULTIPLIER[r1];
     if (adminAbuseActive) winAmount *= 2;
     showMessage(`LIELAIS LAIMESTS! Tu vinnēji ${winAmount} JG dolārus! 🎉`, 'success');
@@ -1355,11 +1371,11 @@ function handName(score){ return HAND_NAMES[score[0]]; }
 /* ================================================================
    POKER (Texas Hold'em vs NPC)
    ================================================================ */
-let poker = { deck:[], playerCards:[], npcCards:[], community:[], street:'preflop', pot:0, over:false };
+let poker = { deck:[], playerCards:[], npcCards:[], community:[], street:'preflop', pot:0, over:true };
 
 window.startPokerGame = function(){
   if (!currentUser) return;
-  const ante = parseInt(document.getElementById('pokerBet').textContent);
+  const ante = parseInt(document.getElementById('pokerBet').value);
   if (users[currentUser].balance < ante){ showMessage('Nepietiek naudas, lai sāktu spēli!','error'); return; }
 
   // ante is charged the moment the hand starts, so you can't dodge a bad
@@ -1417,7 +1433,7 @@ function estimateNpcStrength(){
 
 window.pokerAction = function(action){
   if (poker.over || !currentUser) return;
-  const ante = parseInt(document.getElementById('pokerBet').textContent);
+  const ante = parseInt(document.getElementById('pokerBet').value);
 
   if (action === 'fold'){
     poker.over = true;
@@ -1582,7 +1598,7 @@ window.spinRoulette = function(){
   if (rouletteSpinning || !currentUser) return;
   if (!currentRouletteBet){ showMessage('Vispirms izvēlies likmi!','error'); return; }
 
-  const bet = parseInt(document.getElementById('rouletteBet').textContent);
+  const bet = parseInt(document.getElementById('rouletteBet').value);
   if (users[currentUser].balance < bet){ showMessage('Nepietiek naudas!','error'); return; }
 
   const prevBalance = users[currentUser].balance;
@@ -1658,7 +1674,7 @@ window.spinRoulette = function(){
 let blackjackDeck = [];
 let playerBlackjackCards = [];
 let dealerBlackjackCards = [];
-let blackjackGameOver = false;
+let blackjackGameOver = true;
 
 function getCardValue(card){
   if (card.value==='J'||card.value==='Q'||card.value==='K') return 10;
@@ -1676,7 +1692,7 @@ function calculateHandValue(cards){
 
 window.startBlackjack = function(){
   if (!currentUser) return;
-  const bet = parseInt(document.getElementById('blackjackBet').textContent);
+  const bet = parseInt(document.getElementById('blackjackBet').value);
   if (users[currentUser].balance < bet){ showMessage('Nepietiek naudas, lai sāktu spēli!','error'); return; }
 
   // bet is charged the moment the hand starts, so "Jauna spēle" can't be used
@@ -1719,7 +1735,7 @@ function updateBlackjackControls(){
 
 window.blackjackAction = function(action){
   if (blackjackGameOver || !currentUser) return;
-  const bet = parseInt(document.getElementById('blackjackBet').textContent);
+  const bet = parseInt(document.getElementById('blackjackBet').value);
   const prevBalance = users[currentUser].balance;
 
   // bet was already collected when the hand started — from here on we only
